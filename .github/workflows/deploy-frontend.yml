@@ -48,5 +48,5 @@ jobs:
       - name: Deploy static site to S3 bucket
         run: |
           aws s3 sync ./dist/ ${{ secrets.AWS_BUCKET_PATH }} --delete
-          aws cloudfront create-invalidation --distribution-id ${{ secrets.AWS_DISTRIBUTION_ID }} --paths "projects/game/index.html"
+          aws cloudfront create-invalidation --distribution-id ${{ secrets.AWS_DISTRIBUTION_ID }} --paths "/projects/game/index.html"
         working-directory: ./client
