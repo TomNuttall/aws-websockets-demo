@@ -1,0 +1,52 @@
+name: Build + Deploy Frontend
+
+on:
+  push:
+    branches:
+      - main
+    paths:
+      - 'client/**'
+
+jobs:
+  build-frontend:
+    runs-on: ubuntu-latest
+
+    permissions:
+      id-token: write
+      contents: read
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Setup Node
+        uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+          cache: 'yarn'
+          cache-dependency-path: 'client/yarn.lock'
+
+      - name: Install Dashboard
+        run: yarn install
+        working-directory: ./client
+
+      # - name: Test Dashboard
+      #   run: yarn test
+      #   working-directory: ./client
+
+      - name: Build Dashboard
+        run: yarn build
+        working-directory: ./client
+
+      - name: Configure AWS Credentials for S3 Access
+        uses: aws-actions/configure-aws-credentials@v4
+        with:
+          role-to-assume: ${{ secrets.AWS_BUCKET_ROLE_ARN }}
+          role-duration-seconds: 900
+          aws-region: eu-west-2
+
+      - name: Deploy static site to S3 bucket
+        run: |
+          aws s3 sync ./dist/ ${{ secrets.AWS_BUCKET_ARN }} --delete
+          aws cloudfront create-invalidation --distribution-id ${{ secrets.AWS_DISTRIBUTION_ID }} --paths "projects/game/index.html"
+        working-directory: ./client
