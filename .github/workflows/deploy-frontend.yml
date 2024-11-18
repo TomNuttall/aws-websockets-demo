@@ -27,7 +27,7 @@ jobs:
         with:
           node-version: '20'
           cache: 'yarn'
-          cache-dependency-path: 'game/yarn.lock'
+          cache-dependency-path: 'frontend/game/yarn.lock'
 
       - name: Install Dependancies
         run: yarn install
