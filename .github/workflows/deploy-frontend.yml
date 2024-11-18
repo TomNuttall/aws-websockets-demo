@@ -5,11 +5,14 @@ on:
     branches:
       - main
     paths:
-      - 'client/**'
+      - 'frontend/game/**'
 
 jobs:
   build-frontend:
     runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: ./frontend/game
 
     permissions:
       id-token: write
@@ -24,19 +27,16 @@ jobs:
         with:
           node-version: '20'
           cache: 'yarn'
-          cache-dependency-path: 'client/yarn.lock'
+          cache-dependency-path: 'game/yarn.lock'
 
-      - name: Install Dashboard
+      - name: Install Dependancies
         run: yarn install
-        working-directory: ./client
 
       # - name: Test Dashboard
       #   run: yarn test
-      #   working-directory: ./client
 
-      - name: Build Dashboard
+      - name: Build Client
         run: yarn build
-        working-directory: ./client
 
       - name: Configure AWS Credentials for S3 Access
         uses: aws-actions/configure-aws-credentials@v4
@@ -49,4 +49,3 @@ jobs:
         run: |
           aws s3 sync ./dist/ ${{ secrets.AWS_BUCKET_PATH }} --delete
           aws cloudfront create-invalidation --distribution-id ${{ secrets.AWS_DISTRIBUTION_ID }} --paths "/projects/game/index.html"
-        working-directory: ./client
