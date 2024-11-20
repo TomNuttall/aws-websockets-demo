@@ -14,81 +14,29 @@ export class BackendStack extends cdk.Stack {
   constructor(scope: Construct, id: string, props: BackendStackProps) {
     super(scope, id, props)
 
-    const code = lambda.Code.fromInline(`
-      exports.handler = async function(event) {
-        return {
-          statusCode: 200,
-        };
-      };
-    `)
-
-    const onConnectHandlerLogs = new logs.LogGroup(
-      this,
+    const onConnectHandler = this.createRouteLambda(
       'lambdaOnConnectLogGroup',
-      {
-        logGroupName: `/aws/lambda/santas-lambda-on-connect`,
-        retention: logs.RetentionDays.TWO_WEEKS,
-        removalPolicy: cdk.RemovalPolicy.DESTROY,
-      },
+      'santas-lambda-on-connect',
+      'lambdaOnConnect',
     )
 
-    const onConnectHandler = new lambda.Function(this, 'lambdaOnConnect', {
-      runtime: lambda.Runtime.NODEJS_20_X,
-      handler: 'index.handler',
-      code,
-      logGroup: onConnectHandlerLogs,
-    })
-
-    const onDisconnectHandlerLogs = new logs.LogGroup(
-      this,
+    const onDisconnectHandler = this.createRouteLambda(
       'lambdaOnDisconnectLogGroup',
-      {
-        logGroupName: `/aws/lambda/santas-lambda-on-disconnect`,
-        retention: logs.RetentionDays.TWO_WEEKS,
-        removalPolicy: cdk.RemovalPolicy.DESTROY,
-      },
-    )
-
-    const onDisconnectHandler = new lambda.Function(
-      this,
+      'santas-lambda-on-disconnect',
       'lambdaOnDisconnect',
-      {
-        runtime: lambda.Runtime.NODEJS_20_X,
-        handler: 'index.handler',
-        code,
-        logGroup: onDisconnectHandlerLogs,
-      },
     )
 
-    const onSendHandlerLogs = new logs.LogGroup(this, 'lambdaOnSendLogGroup', {
-      logGroupName: `/aws/lambda/santas-lambda-on-send`,
-      retention: logs.RetentionDays.TWO_WEEKS,
-      removalPolicy: cdk.RemovalPolicy.DESTROY,
-    })
+    const onSendHandler = this.createRouteLambda(
+      'lambdaOnSendLogGroup',
+      'santas-lambda-on-send',
+      'lambdaOnSend',
+    )
 
-    const onSendHandler = new lambda.Function(this, 'lambdaOnSend', {
-      runtime: lambda.Runtime.NODEJS_20_X,
-      handler: 'index.handler',
-      code,
-      logGroup: onSendHandlerLogs,
-    })
-
-    const onBroadcastHandlerLogs = new logs.LogGroup(
-      this,
+    const onBroadcastHandler = this.createRouteLambda(
       'lambdaOnBroadcastLogGroup',
-      {
-        logGroupName: `/aws/lambda/santas-lambda-on-broadcast`,
-        retention: logs.RetentionDays.TWO_WEEKS,
-        removalPolicy: cdk.RemovalPolicy.DESTROY,
-      },
+      'santas-lambda-on-broadcast',
+      'lambdaOnBroadcast',
     )
-
-    const onBroadcastHandler = new lambda.Function(this, 'lambdaOnBroadcast', {
-      runtime: lambda.Runtime.NODEJS_20_X,
-      handler: 'index.handler',
-      code,
-      logGroup: onBroadcastHandlerLogs,
-    })
 
     const webSocketApi = new apigwv2.WebSocketApi(
       this,
@@ -149,5 +97,32 @@ export class BackendStack extends cdk.Stack {
         ],
       }),
     )
+  }
+
+  private createRouteLambda(
+    logGroupName: string,
+    logGroupPath: string,
+    lambdaName: string,
+  ): cdk.aws_lambda.Function {
+    const code = lambda.Code.fromInline(`
+      exports.handler = async function(event) {
+        return {
+          statusCode: 200,
+        };
+      };
+    `)
+
+    const onBroadcastHandlerLogs = new logs.LogGroup(this, logGroupName, {
+      logGroupName: `/aws/lambda/${logGroupPath}`,
+      retention: logs.RetentionDays.TWO_WEEKS,
+      removalPolicy: cdk.RemovalPolicy.DESTROY,
+    })
+
+    return new lambda.Function(this, lambdaName, {
+      runtime: lambda.Runtime.NODEJS_20_X,
+      handler: 'index.handler',
+      code,
+      logGroup: onBroadcastHandlerLogs,
+    })
   }
 }

@@ -1,0 +1,71 @@
+# name: Build + Deploy Backend
+
+# on:
+#   push:
+#     branches:
+#       - main
+#     paths:
+#       - 'backend/lambdas/**'
+
+# jobs:
+#   build-backend:
+#     runs-on: ubuntu-latest
+
+#     defaults:
+#       run:
+#         working-directory: ./backend/lambdas
+
+#     permissions:
+#       id-token: write
+#       contents: read
+
+#     steps:
+#       - name: Checkout
+#         uses: actions/checkout@v4
+
+#       - name: Project
+#         uses: dorny/paths-filter@v3
+#         id: filters
+#         with:
+#           filters: |
+#             on-connect:
+#               - 'backend/lambda/on-connect/**'
+#             on-disconnect:
+#               - 'backend/lambda/on-disconnect/**'
+#             on-send:
+#               - 'backend/lambda/on-sendt/**'
+#             on-broadcast:
+#               - 'backend/lambda/on-broadcast/**'
+
+#       - name: PathVariable
+#         if: steps.filter.outputs.on-connnect == 'true'
+#         run:
+
+#       - name: Setup Node
+#         uses: actions/setup-node@v4
+#         with:
+#           node-version: '20'
+#           cache: 'yarn'
+#           cache-dependency-path: 'backend/yarn.lock'
+
+#       - name: Install Backend
+#         run: yarn install
+#         working-directory: ./backend
+
+#       - name: Test Backend
+#         run: yarn test
+#         working-directory: ./backend
+
+#       - name: Zip lambda package
+#         run: zip -r ../../lambda_package.zip *
+#         working-directory: ./backend/src
+
+#       - name: Configure AWS Credentials for Lambda Access
+#         uses: aws-actions/configure-aws-credentials@v4
+#         with:
+#           role-to-assume: ${{ secrets.AWS_LAMBDA_ROLE_ARN }}
+#           role-duration-seconds: 900
+#           aws-region: eu-west-2
+
+#       - name: Deploy lambda
+#         run: aws lambda update-function-code --function-name ${{ matrix.target }} --zip-file fileb://lambda_package.zip
