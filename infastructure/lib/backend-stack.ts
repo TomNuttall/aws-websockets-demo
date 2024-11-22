@@ -3,40 +3,52 @@ import { Construct } from 'constructs'
 import * as iam from 'aws-cdk-lib/aws-iam'
 import * as logs from 'aws-cdk-lib/aws-logs'
 import * as lambda from 'aws-cdk-lib/aws-lambda'
+import * as lambdaevents from 'aws-cdk-lib/aws-lambda-event-sources'
 import * as apigwv2 from 'aws-cdk-lib/aws-apigatewayv2'
 import * as apigwv2integrations from 'aws-cdk-lib/aws-apigatewayv2-integrations'
+import * as sqs from 'aws-cdk-lib/aws-sqs'
 
 interface BackendStackProps extends cdk.StackProps {
   repoName: string
+  connectionsTable: cdk.aws_dynamodb.ITable
 }
 
 export class BackendStack extends cdk.Stack {
   constructor(scope: Construct, id: string, props: BackendStackProps) {
     super(scope, id, props)
 
-    const onConnectHandler = this.createRouteLambda(
-      'lambdaOnConnectLogGroup',
-      'santas-lambda-on-connect',
-      'lambdaOnConnect',
+    const onConnectHandler = this.createRouteLambda('onConnect', [
+      new iam.PolicyStatement({
+        effect: iam.Effect.ALLOW,
+        actions: ['dynamodb:PutItem'],
+        resources: [props.connectionsTable.tableArn],
+      }),
+    ])
+    onConnectHandler.addEnvironment(
+      'TABLE_NAME',
+      props.connectionsTable.tableName,
     )
 
-    const onDisconnectHandler = this.createRouteLambda(
-      'lambdaOnDisconnectLogGroup',
-      'santas-lambda-on-disconnect',
-      'lambdaOnDisconnect',
+    const onDisconnectHandler = this.createRouteLambda('onDisconnect', [
+      new iam.PolicyStatement({
+        effect: iam.Effect.ALLOW,
+        actions: ['dynamodb:DeleteItem'],
+        resources: [props.connectionsTable.tableArn],
+      }),
+    ])
+    onDisconnectHandler.addEnvironment(
+      'TABLE_NAME',
+      props.connectionsTable.tableName,
     )
 
-    const onSendHandler = this.createRouteLambda(
-      'lambdaOnSendLogGroup',
-      'santas-lambda-on-send',
-      'lambdaOnSend',
-    )
-
-    const onBroadcastHandler = this.createRouteLambda(
-      'lambdaOnBroadcastLogGroup',
-      'santas-lambda-on-broadcast',
-      'lambdaOnBroadcast',
-    )
+    const onSendHandler = this.createRouteLambda('onSend', [
+      new iam.PolicyStatement({
+        effect: iam.Effect.ALLOW,
+        actions: ['dynamodb:PutItem'],
+        resources: [props.connectionsTable.tableArn],
+      }),
+    ])
+    onSendHandler.addEnvironment('TABLE_NAME', props.connectionsTable.tableName)
 
     const webSocketApi = new apigwv2.WebSocketApi(
       this,
@@ -62,12 +74,60 @@ export class BackendStack extends cdk.Stack {
       stageName: 'dev',
       autoDeploy: true,
     })
+
     webSocketApi.addRoute('sendMessage', {
       integration: new apigwv2integrations.WebSocketLambdaIntegration(
         'SendMessageIntegration',
         onSendHandler,
       ),
     })
+
+    // const eventQueue = new sqs.Queue(this, 'EventQueue')
+
+    const onGameStateChangeHandler = this.createRouteLambda(
+      'onGameStateChange',
+      [
+        new iam.PolicyStatement({
+          effect: iam.Effect.ALLOW,
+          actions: [
+            'dynamodb:GetRecords',
+            'dynamodb:GetShardIterator',
+            'dynamodb:DescribeStream',
+            'dynamodb:ListStreams',
+            'dynamodb:Scan',
+          ],
+          resources: [props.connectionsTable.tableArn],
+        }),
+        new iam.PolicyStatement({
+          effect: iam.Effect.ALLOW,
+          actions: ['execute-api:Invoke', 'execute-api:ManageConnections'],
+          resources: [webSocketApi.arnForExecuteApi()],
+        }),
+      ],
+    )
+
+    onGameStateChangeHandler.addEventSource(
+      new lambdaevents.DynamoEventSource(props.connectionsTable, {
+        startingPosition: lambda.StartingPosition.LATEST,
+        batchSize: 5,
+        enabled: true,
+        retryAttempts: 3,
+      }),
+    )
+    onGameStateChangeHandler.addEnvironment(
+      'API_ENDPOINT',
+      webSocketApi.apiEndpoint,
+    )
+    onGameStateChangeHandler.addEnvironment(
+      'TABLE_NAME',
+      props.connectionsTable.tableName,
+    )
+
+    // const serverBroadcast = this.createRouteLambda('serverBroadcast', [])
+    // serverBroadcast.addEnvironment('API', webSocketApi.apiEndpoint)
+    // serverBroadcast.addEventSource(
+    //   new lambdaevents.SqsEventSource(eventQueue, { batchSize: 1 }),
+    // )
 
     const githubRole = new iam.Role(this, 'roleGithub', {
       assumedBy: new iam.FederatedPrincipal(
@@ -93,16 +153,15 @@ export class BackendStack extends cdk.Stack {
           onConnectHandler.functionArn,
           onDisconnectHandler.functionArn,
           onSendHandler.functionArn,
-          onBroadcastHandler.functionArn,
+          onGameStateChangeHandler.functionArn,
         ],
       }),
     )
   }
 
   private createRouteLambda(
-    logGroupName: string,
-    logGroupPath: string,
     lambdaName: string,
+    permissionsPolicies: iam.PolicyStatement[],
   ): cdk.aws_lambda.Function {
     const code = lambda.Code.fromInline(`
       exports.handler = async function(event) {
@@ -112,17 +171,35 @@ export class BackendStack extends cdk.Stack {
       };
     `)
 
-    const onBroadcastHandlerLogs = new logs.LogGroup(this, logGroupName, {
-      logGroupName: `/aws/lambda/${logGroupPath}`,
+    const logGroup = new logs.LogGroup(this, `lambda${lambdaName}LogGroup`, {
+      logGroupName: `/aws/lambda/santas-lambda-${lambdaName}`,
       retention: logs.RetentionDays.TWO_WEEKS,
       removalPolicy: cdk.RemovalPolicy.DESTROY,
     })
+
+    const role = new iam.Role(this, `roleLambda${lambdaName}`, {
+      assumedBy: new iam.ServicePrincipal('lambda.amazonaws.com'),
+    })
+    permissionsPolicies.forEach((policy) => role.addToPolicy(policy))
+
+    role.addToPolicy(
+      new iam.PolicyStatement({
+        effect: iam.Effect.ALLOW,
+        actions: [
+          'logs:CreateLogGroup',
+          'logs:CreateLogStream',
+          'logs:PutLogEvents',
+        ],
+        resources: [logGroup.logGroupArn],
+      }),
+    )
 
     return new lambda.Function(this, lambdaName, {
       runtime: lambda.Runtime.NODEJS_20_X,
       handler: 'index.handler',
       code,
-      logGroup: onBroadcastHandlerLogs,
+      logGroup,
+      role,
     })
   }
 }

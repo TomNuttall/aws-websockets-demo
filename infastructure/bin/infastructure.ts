@@ -2,6 +2,7 @@
 import 'source-map-support/register'
 import * as cdk from 'aws-cdk-lib'
 import { FrontendStack } from '../lib/frontend-stack'
+import { StorageStack } from '../lib/storage-stack'
 import { BackendStack } from '../lib/backend-stack'
 import 'dotenv/config'
 
@@ -22,8 +23,12 @@ new FrontendStack(app, 'santas-frontend-stack', {
 })
 
 // Storage Stack
+const storage = new StorageStack(app, 'santas-storage-stack', {
+  env: config.env,
+})
 
 new BackendStack(app, 'santas-backend-stack', {
   env: config.env,
   repoName: `${process.env.REPO_NAME}`,
+  connectionsTable: storage.connectionsTable,
 })
