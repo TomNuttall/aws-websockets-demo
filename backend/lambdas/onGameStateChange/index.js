@@ -5,8 +5,8 @@ import {
 import { DynamoDBClient, QueryCommand } from '@aws-sdk/client-dynamodb'
 import { unmarshall } from '@aws-sdk/util-dynamodb'
 
-const callbackUrl = `https://7mmhehm6rl.execute-api.eu-west-2.amazonaws.com/dev/`
-const apiClient = new ApiGatewayManagementApiClient({ endpoint: callbackUrl })
+const { API_ENDPOINT } = process.env
+const apiClient = new ApiGatewayManagementApiClient({ endpoint: API_ENDPOINT })
 const ddbClient = new DynamoDBClient()
 
 const getPlayersState = async (gameId) => {
