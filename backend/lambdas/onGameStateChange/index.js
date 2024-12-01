@@ -5,13 +5,13 @@ import {
 import { DynamoDBClient, QueryCommand } from '@aws-sdk/client-dynamodb'
 import { unmarshall } from '@aws-sdk/util-dynamodb'
 
-const { API_ENDPOINT } = process.env
+const { CONNECTIONS_TABLE_NAME, API_ENDPOINT } = process.env
 const apiClient = new ApiGatewayManagementApiClient({ endpoint: API_ENDPOINT })
 const ddbClient = new DynamoDBClient()
 
 const getPlayersState = async (gameId) => {
   const command = new QueryCommand({
-    TableName: 'connections-table',
+    TableName: CONNECTIONS_TABLE_NAME,
     KeyConditionExpression: '#gameId = :gameId',
     ExpressionAttributeNames: { '#gameId': 'gameId' },
     ExpressionAttributeValues: { ':gameId': { S: gameId } },
