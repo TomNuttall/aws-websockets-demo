@@ -1,0 +1,57 @@
+name: Build + Deploy Backend
+
+on:
+  workflow_dispatch:
+    inputs:
+      buildPath:
+        description: 'Backend Lambda'
+        required: true
+        default: 'onGameStateChange'
+        type: choice
+        options:
+          - onConnect
+          - onDisconnect
+          - onSendMessage
+          - onGameStateChange
+
+jobs:
+  build-backend:
+    runs-on: ubuntu-latest
+
+    defaults:
+      run:
+        working-directory: './backend/lambdas/${{ inputs.buildPath }}'
+
+    permissions:
+      id-token: write
+      contents: read
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Setup Node
+        uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+          cache: 'yarn'
+          cache-dependency-path: 'backend/lambdas/${{ inputs.buildPath }}/yarn.lock'
+
+      - name: Install Backend
+        run: yarn install
+
+      # - name: Test Backend
+      #   run: yarn test
+
+      - name: Zip lambda package
+        run: zip -r ../../lambda_package.zip *
+
+      - name: Configure AWS Credentials for Lambda Access
+        uses: aws-actions/configure-aws-credentials@v4
+        with:
+          role-to-assume: ${{ secrets.AWS_LAMBDA_ROLE_ARN }}
+          role-duration-seconds: 900
+          aws-region: eu-west-2
+
+      - name: Deploy lambda
+        run: aws lambda update-function-code --function-name 'santas-lambda-${{ inputs.buildPath }}' --zip-file fileb://lambda_package.zip

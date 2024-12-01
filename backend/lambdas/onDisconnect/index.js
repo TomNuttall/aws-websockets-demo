@@ -1,19 +1,21 @@
 import { DynamoDBClient, DeleteItemCommand } from '@aws-sdk/client-dynamodb'
 
-const { TABLE_NAME } = process.env
+const { CONNECTIONS_TABLE_NAME } = process.env
 const ddbClient = new DynamoDBClient()
 
 const handler = async (event) => {
   const connectionId = event.requestContext.connectionId
+  const gameId = 'testing'
+
   const command = new DeleteItemCommand({
-    TableName: TABLE_NAME,
+    TableName: CONNECTIONS_TABLE_NAME,
     Key: {
-      gameId: { S: 'test-game' },
+      gameId: { S: gameId },
       connectionId: { S: connectionId },
     },
   })
   await ddbClient.send(command)
-  console.log('Disconnected: ', connectionId)
+  console.log('Disconnected: ', connectionId, gameId)
 
   return {
     statusCode: 200,
