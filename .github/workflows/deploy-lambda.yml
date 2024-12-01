@@ -44,7 +44,7 @@ jobs:
       #   run: yarn test
 
       - name: Zip lambda package
-        run: zip -r ../../lambda_package.zip *
+        run: zip -r ../../../lambda_package.zip *
 
       - name: Configure AWS Credentials for Lambda Access
         uses: aws-actions/configure-aws-credentials@v4
