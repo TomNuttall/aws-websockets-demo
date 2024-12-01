@@ -39,8 +39,11 @@ export class FrontendStack extends cdk.Stack {
     githubRole.addToPolicy(
       new iam.PolicyStatement({
         effect: iam.Effect.ALLOW,
-        actions: ['s3:GetObject', 's3:PutObject'],
-        resources: [`arn:aws:s3:::${props.bucketName}/projects/game/*`],
+        actions: ['s3:DeleteObject', 's3:GetObject', 's3:PutObject'],
+        resources: [
+          `arn:aws:s3:::${props.bucketName}/projects/game/*`,
+          `arn:aws:s3:::${props.bucketName}/projects/xmas/*`,
+        ],
       }),
     )
 

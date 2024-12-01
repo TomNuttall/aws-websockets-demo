@@ -6,11 +6,11 @@ import * as lambda from 'aws-cdk-lib/aws-lambda'
 import * as lambdaevents from 'aws-cdk-lib/aws-lambda-event-sources'
 import * as apigwv2 from 'aws-cdk-lib/aws-apigatewayv2'
 import * as apigwv2integrations from 'aws-cdk-lib/aws-apigatewayv2-integrations'
-import * as sqs from 'aws-cdk-lib/aws-sqs'
 
 interface BackendStackProps extends cdk.StackProps {
   repoName: string
   connectionsTable: cdk.aws_dynamodb.ITable
+  hostsTable: cdk.aws_dynamodb.ITable
 }
 
 export class BackendStack extends cdk.Stack {
@@ -25,7 +25,7 @@ export class BackendStack extends cdk.Stack {
       }),
     ])
     onConnectHandler.addEnvironment(
-      'TABLE_NAME',
+      'CONNECTIONS_TABLE_NAME',
       props.connectionsTable.tableName,
     )
 
@@ -37,7 +37,7 @@ export class BackendStack extends cdk.Stack {
       }),
     ])
     onDisconnectHandler.addEnvironment(
-      'TABLE_NAME',
+      'CONNECTIONS_TABLE_NAME',
       props.connectionsTable.tableName,
     )
 
@@ -48,7 +48,10 @@ export class BackendStack extends cdk.Stack {
         resources: [props.connectionsTable.tableArn],
       }),
     ])
-    onSendHandler.addEnvironment('TABLE_NAME', props.connectionsTable.tableName)
+    onSendHandler.addEnvironment(
+      'CONNECTIONS_TABLE_NAME',
+      props.connectionsTable.tableName,
+    )
 
     const webSocketApi = new apigwv2.WebSocketApi(
       this,
@@ -81,8 +84,6 @@ export class BackendStack extends cdk.Stack {
         onSendHandler,
       ),
     })
-
-    // const eventQueue = new sqs.Queue(this, 'EventQueue')
 
     const onGameStateChangeHandler = this.createRouteLambda(
       'onGameStateChange',
@@ -119,14 +120,12 @@ export class BackendStack extends cdk.Stack {
       webSocketApi.apiEndpoint,
     )
     onGameStateChangeHandler.addEnvironment(
-      'TABLE_NAME',
+      'CONNECTIONS_TABLE_NAME',
       props.connectionsTable.tableName,
     )
-
-    // const serverBroadcast = this.createRouteLambda('serverBroadcast', [])
-    // serverBroadcast.addEnvironment('API', webSocketApi.apiEndpoint)
-    // serverBroadcast.addEventSource(
-    //   new lambdaevents.SqsEventSource(eventQueue, { batchSize: 1 }),
+    // onGameStateChangeHandler.addEnvironment(
+    //   'HOSTS_TABLE_NAME',
+    //   props.hostsTable.tableName,
     // )
 
     const githubRole = new iam.Role(this, 'roleGithub', {
@@ -195,6 +194,7 @@ export class BackendStack extends cdk.Stack {
     )
 
     return new lambda.Function(this, lambdaName, {
+      functionName: `santas-lambda-${lambdaName}`,
       runtime: lambda.Runtime.NODEJS_20_X,
       handler: 'index.handler',
       code,

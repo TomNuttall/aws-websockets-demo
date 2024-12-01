@@ -31,4 +31,5 @@ new BackendStack(app, 'santas-backend-stack', {
   env: config.env,
   repoName: `${process.env.REPO_NAME}`,
   connectionsTable: storage.connectionsTable,
+  hostsTable: storage.hostsTable,
 })
