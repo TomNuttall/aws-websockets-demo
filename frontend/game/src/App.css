@@ -1,0 +1,49 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+[color-scheme='light'] {
+  color-scheme: light;
+
+  --brand-text: #213547;
+  --brand-background: #f4f4f4;
+  --brand-primary: white;
+  --brand-secondary: #213547;
+}
+
+[color-scheme='dark'] {
+  color-scheme: dark;
+
+  --brand-text: #f4f4f4;
+  --brand-background: #121212;
+  --brand-primary: #1f1a24;
+  --brand-secondary: white;
+}
+
+:root {
+  font-family: 'Poppins', sans-serif;
+  font-weight: 400;
+  line-height: 1.5;
+
+  color: var(--brand-text);
+  background-color: var(--brand-background);
+
+  color-scheme: light dark;
+}
+
+body {
+  margin: 0;
+  padding: 0;
+}
+
+.btn-primary {
+  @apply bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded;
+}
+
+.label {
+  @apply block mb-2 text-sm font-medium text-gray-900 dark:text-white;
+}
+
+.input {
+  @apply bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500;
+}
