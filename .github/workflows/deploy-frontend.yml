@@ -1,18 +1,23 @@
 name: Build + Deploy Frontend
 
 on:
-  push:
-    branches:
-      - main
-    paths:
-      - 'frontend/game/**'
+  workflow_dispatch:
+    inputs:
+      buildPath:
+        description: 'Frontend App'
+        required: true
+        default: 'game'
+        type: choice
+        options:
+          - game
+          - xmas
 
 jobs:
   build-frontend:
     runs-on: ubuntu-latest
     defaults:
       run:
-        working-directory: ./frontend/game
+        working-directory: './frontend/$BUILD_PATH'
 
     permissions:
       id-token: write
@@ -27,7 +32,7 @@ jobs:
         with:
           node-version: '20'
           cache: 'yarn'
-          cache-dependency-path: 'frontend/game/yarn.lock'
+          cache-dependency-path: 'frontend/${{ inputs.buildPath }}/yarn.lock'
 
       - name: Install Dependancies
         run: yarn install
@@ -47,5 +52,5 @@ jobs:
 
       - name: Deploy static site to S3 bucket
         run: |
-          aws s3 sync ./dist/ ${{ secrets.AWS_BUCKET_PATH }} --delete
-          aws cloudfront create-invalidation --distribution-id ${{ secrets.AWS_DISTRIBUTION_ID }} --paths "/projects/game/index.html"
+          aws s3 sync ./dist/ "${{ secrets.AWS_BUCKET_PATH_GAME }}/${{ inputs.buildPath }}" --delete
+          aws cloudfront create-invalidation --distribution-id ${{ secrets.AWS_DISTRIBUTION_ID }} --paths "/projects/${{ inputs.buildPath }}/index.html"
