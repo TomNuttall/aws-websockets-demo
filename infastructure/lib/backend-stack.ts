@@ -95,7 +95,7 @@ export class BackendStack extends cdk.Stack {
             'dynamodb:GetShardIterator',
             'dynamodb:DescribeStream',
             'dynamodb:ListStreams',
-            'dynamodb:Scan',
+            'dynamodb:Query',
           ],
           resources: [props.connectionsTable.tableArn],
         }),
