@@ -30,21 +30,21 @@ jobs:
       - name: Checkout
         uses: actions/checkout@v4
 
-      - name: Setup Node
-        uses: actions/setup-node@v4
-        with:
-          node-version: '20'
-          # cache: 'yarn'
-          # cache-dependency-path: 'backend/lambdas/${{ inputs.buildPath }}/yarn.lock'
+      # - name: Setup Node
+      #   uses: actions/setup-node@v4
+      #   with:
+      #     node-version: '20'
+      #     cache: 'yarn'
+      #     cache-dependency-path: 'backend/lambdas/${{ inputs.buildPath }}/yarn.lock'
 
-      - name: Install Backend
-        run: yarn install
+      # - name: Install Backend
+      #   run: yarn install
 
       # - name: Test Backend
       #   run: yarn test
 
       - name: Zip lambda package
-        run: zip -r ../../../lambda_package.zip *
+        run: zip -r lambda_package.zip *
 
       - name: Configure AWS Credentials for Lambda Access
         uses: aws-actions/configure-aws-credentials@v4
