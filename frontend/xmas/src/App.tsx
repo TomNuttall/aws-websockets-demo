@@ -1,5 +1,5 @@
-import { useEffect, useState } from 'react'
-import useWebSocket /*, { ReadyState } */ from 'react-use-websocket'
+import { useEffect, useState, useCallback } from 'react'
+import useWebSocket, { ReadyState } from 'react-use-websocket'
 import { Application as PixiApplication } from '@pixi/app'
 import { Stage } from '@pixi/react'
 import AssetContextProvider from './Context/AssetContext'
@@ -16,7 +16,9 @@ enum GameState {
 }
 
 export interface HostData {
-  event: string
+  ready?: boolean
+  started?: boolean
+  finished?: boolean
 }
 
 export interface PlayerData {
@@ -25,21 +27,52 @@ export interface PlayerData {
 }
 
 interface GameData {
-  numPlayers: number
+  numConnections: number
   gameState: GameState
   players: PlayerData[]
 }
 
-const SOCKET_URL = 'wss://7mmhehm6rl.execute-api.eu-west-2.amazonaws.com/dev'
+const SOCKET_URL = 'wss://z9ssnwmz69.execute-api.eu-west-2.amazonaws.com/dev'
 
 function App() {
   const [app, setApp] = useState<PixiApplication>()
   const [animate, setAnimate] = useState<boolean>(false)
   const [socketUrl, setSocketUrl] = useState<string>('')
   const [gameData, setGameData] = useState<GameData>({
-    numPlayers: 0,
+    numConnections: 0,
     gameState: GameState.CharacterSelect,
     players: [],
+  })
+  const [_msgHistory, setMsgHistory] = useState<string[]>([])
+
+  const onReceiveMessage = useCallback((event: any) => {
+    const gameData = JSON.parse(event.data)
+    console.log('onReceiveMessage: ', gameData)
+    setGameData(gameData)
+    setMsgHistory((prevState: string[]) => {
+      prevState.push(gameData.msgs)
+      return prevState
+    })
+
+    if (!animate && gameData.gameState === GameState.WaitGame) {
+      setAnimate(true)
+      setTimeout(() => {
+        sendMessage({ finished: true })
+      }, 5000)
+    }
+  }, [])
+
+  const sendMessage = useCallback((hostData: HostData) => {
+    console.log('onHostSendMessage: ', hostData)
+    sendJsonMessage({ action: 'sendHostMessage', data: hostData })
+  }, [])
+
+  const onStart = useCallback(() => {
+    sendMessage({ started: true })
+  }, [])
+
+  const { sendJsonMessage, readyState } = useWebSocket(socketUrl, {
+    onMessage: onReceiveMessage,
   })
 
   useEffect(() => {
@@ -53,44 +86,11 @@ function App() {
     setup()
   }, [app])
 
-  const onReceiveMessage = (event: any) => {
-    const gameData = JSON.parse(event.data)
-    console.log('onReceiveMessage: ', gameData)
-    setGameData(gameData)
-  }
-
-  const sendMessage = (hostData: HostData) => {
-    console.log('onSendMessage: ', hostData)
-    sendJsonMessage({ action: 'sendHostMessage', data: hostData })
-  }
-
-  const { sendJsonMessage /*, readyState*/ } = useWebSocket(socketUrl, {
-    onMessage: onReceiveMessage,
-  })
-
-  const onStart = () => {
-    //sendMessage({ event: 'startRace' })
-    console.log('START: ')
-    setAnimate(true)
-  }
-
-  const renderGameState = (state: GameState) => {
-    console.log('STATE: ', state)
-    switch (state) {
-      case GameState.CharacterSelect:
-        return <Intro connect={() => setSocketUrl(SOCKET_URL)} />
-
-      case GameState.WaitPlayers:
-      case GameState.WaitGame:
-        return <WaitPlayers players={gameData.players} />
-
-      // case GameState.WaitGame:
-      //   return <></>
-
-      case GameState.Results:
-        return <></>
+  useEffect(() => {
+    if (readyState === ReadyState.OPEN) {
+      sendMessage({ ready: true })
     }
-  }
+  }, [readyState])
 
   return (
     <Stage
@@ -100,11 +100,18 @@ function App() {
     >
       <AssetContextProvider>
         <Background raceDuration={animate ? 60 * 60 : 0} onStart={onStart} />
-        {renderGameState(gameData.gameState)}
-        <Hud
-          numConnections={gameData.numPlayers}
-          numPlayers={gameData.players.filter((player) => player?.name).length}
-        />
+        {socketUrl.length === 0 && (
+          <Intro connect={() => setSocketUrl(SOCKET_URL)} />
+        )}
+        {readyState === ReadyState.OPEN && (
+          <>
+            <WaitPlayers players={gameData?.players ?? []} />
+            <Hud
+              numConnections={gameData?.numConnections}
+              numPlayers={gameData?.players?.length}
+            />
+          </>
+        )}
       </AssetContextProvider>
     </Stage>
   )
