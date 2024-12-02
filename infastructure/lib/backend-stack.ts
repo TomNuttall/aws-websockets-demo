@@ -91,7 +91,7 @@ export class BackendStack extends cdk.Stack {
         resources: [props.connectionsTable.tableArn],
       }),
     ])
-    onSendHandler.addEnvironment(
+    onHostSendHandler.addEnvironment(
       'CONNECTIONS_TABLE_NAME',
       props.connectionsTable.tableName,
     )
@@ -140,10 +140,6 @@ export class BackendStack extends cdk.Stack {
       'CONNECTIONS_TABLE_NAME',
       props.connectionsTable.tableName,
     )
-    // onGameStateChangeHandler.addEnvironment(
-    //   'HOSTS_TABLE_NAME',
-    //   props.hostsTable.tableName,
-    // )
 
     const githubRole = new iam.Role(this, 'roleGithub', {
       assumedBy: new iam.FederatedPrincipal(

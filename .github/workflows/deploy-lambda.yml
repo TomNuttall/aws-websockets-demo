@@ -12,6 +12,7 @@ on:
           - onConnect
           - onDisconnect
           - onSend
+          - onHostSend
           - onGameStateChange
 
 jobs:
