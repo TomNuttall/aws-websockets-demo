@@ -1,0 +1,9 @@
+.theme-toggle {
+  all: unset;
+  display: flex;
+
+  &:focus {
+    outline: solid 2px var(--brand-focus);
+    outline-offset: 4px;
+  }
+}

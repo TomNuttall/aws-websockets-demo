@@ -1,18 +1,21 @@
 import React, { useState } from 'react'
 import useWebSocket, { ReadyState } from 'react-use-websocket'
+import { Toaster } from 'react-hot-toast'
+import Game from './containers/Game'
 import CharacterSelect from './containers/CharacterSelect'
-import WaitPlayers from './containers/WaitPlayers'
-import WaitGame from './containers/WaitGame'
-import Results from './containers/Results'
-import Hud from './components/Hud'
+import Character from './components/Character'
+import Header from './components/Header'
+import WaitPanel from './components/WaitPanel'
 import toast from 'react-hot-toast'
-import './App.css'
+import { formatOrdinals } from './utils/helper'
+
+import './App.scss'
 
 enum GameState {
   CharacterSelect = 'characterSelect',
   WaitPlayers = 'waitPlayers',
   WaitGame = 'waitGame',
-  Results = 'waitResults',
+  Results = 'results',
 }
 
 export interface PlayerData {
@@ -22,15 +25,19 @@ export interface PlayerData {
 
 interface GameData {
   numConnections: number
+  numPlayers: number
   gameState: GameState
   players: PlayerData[]
+  position?: number
 }
 
 const SOCKET_URL = 'wss://z9ssnwmz69.execute-api.eu-west-2.amazonaws.com/dev'
 
 const App: React.FC = () => {
+  const [player, setPlayer] = useState<PlayerData>({ name: '', character: 1 })
   const [gameData, setGameData] = useState<GameData>({
     numConnections: 0,
+    numPlayers: 0,
     gameState: GameState.CharacterSelect,
     players: [],
   })
@@ -42,7 +49,7 @@ const App: React.FC = () => {
 
     setGameData(gameData)
     gameData.msgs.forEach((msg: string) => {
-      toast(msg)
+      toast.success(msg)
     })
   }
 
@@ -58,30 +65,38 @@ const App: React.FC = () => {
   const renderGameState = (state: GameState) => {
     switch (state) {
       case GameState.CharacterSelect:
-        return <CharacterSelect sendMessage={sendMessage} />
+        return (
+          <CharacterSelect sendMessage={sendMessage} updatePlayer={setPlayer} />
+        )
 
       case GameState.WaitPlayers:
-        return <WaitPlayers numPlayers={gameData.players.length} />
+        return <WaitPanel msg={'Waiting for Players'} />
 
       case GameState.WaitGame:
-        return <WaitGame />
+        return <WaitPanel msg={'Game in Progress'} />
 
       case GameState.Results:
         return (
-          <Results names={gameData.players.map((state) => state.name || '')} />
+          <WaitPanel
+            msg={`You finished ${formatOrdinals(gameData?.position ?? 1)}`}
+          />
         )
     }
   }
 
   return (
-    <div className="container mx-auto">
-      <div className="flex flex-col items-center">
-        {readyState === ReadyState.OPEN && renderGameState(gameData.gameState)}
-        <Hud
-          numPlayers={gameData.players.length}
-          numConnections={gameData.numConnections}
-        />
-      </div>
+    <div className="app">
+      <Header
+        title="Santa Shuffle"
+        repo="https://github.com/TomNuttall/santa-shuffle"
+      />
+      <Toaster reverseOrder={false} />
+      <Game>
+        <Character width={200} height={200} player={player} />
+      </Game>
+      {readyState === ReadyState.OPEN && (
+        <div className="app__main">{renderGameState(gameData.gameState)}</div>
+      )}
     </div>
   )
 }

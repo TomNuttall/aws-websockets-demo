@@ -1,0 +1,52 @@
+{"frames": {
+
+"background":
+{
+	"frame": {"x":0,"y":0,"w":525,"h":328},
+	"rotated": false,
+	"trimmed": false,
+	"spriteSourceSize": {"x":0,"y":0,"w":525,"h":328},
+	"sourceSize": {"w":525,"h":328}
+},
+"dalek":
+{
+	"frame": {"x":0,"y":746,"w":900,"h":960},
+	"rotated": false,
+	"trimmed": false,
+	"spriteSourceSize": {"x":0,"y":0,"w":900,"h":960},
+	"sourceSize": {"w":900,"h":960}
+},
+"igloo":
+{
+	"frame": {"x":525,"y":0,"w":600,"h":494},
+	"rotated": false,
+	"trimmed": false,
+	"spriteSourceSize": {"x":0,"y":0,"w":600,"h":494},
+	"sourceSize": {"w":600,"h":494}
+},
+"penguin":
+{
+	"frame": {"x":900,"y":746,"w":500,"h":1060},
+	"rotated": false,
+	"trimmed": false,
+	"spriteSourceSize": {"x":0,"y":0,"w":500,"h":1060},
+	"sourceSize": {"w":500,"h":1060}
+},
+"snowman":
+{
+	"frame": {"x":1125,"y":0,"w":550,"h":746},
+	"rotated": false,
+	"trimmed": false,
+	"spriteSourceSize": {"x":0,"y":0,"w":550,"h":746},
+	"sourceSize": {"w":550,"h":746}
+}},
+"meta": {
+	"app": "https://www.codeandweb.com/texturepacker",
+	"version": "1.1",
+	"image": "sprites.webp",
+	"format": "RGBA8888",
+	"size": {"w":1675,"h":1806},
+	"scale": "1",
+	"smartupdate": "$TexturePacker:SmartUpdate:91e8af0deecb869a38501e5a2b35d933:74d9f7a337e128d9282805984b60d829:8f90a40215e76b7d1e55396bb87b74be$"
+}
+}

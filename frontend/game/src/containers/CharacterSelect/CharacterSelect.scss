@@ -1,0 +1,13 @@
+@import './../../form';
+
+.character-select {
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+  justify-content: center;
+
+  &__submit {
+    margin-top: 0.5rem;
+    text-align: center;
+  }
+}

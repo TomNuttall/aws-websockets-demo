@@ -1,0 +1,91 @@
+.form {
+  & h1 {
+    text-align: center;
+    margin-top: 0rem;
+    margin-bottom: 1rem;
+    font-size: 1.2rem;
+  }
+
+  &__error {
+    color: var(--brand-error);
+    margin: 0;
+    font-size: 0.9rem;
+    margin-top: 0.25rem;
+  }
+
+  &__input {
+    display: flex;
+    flex-direction: column;
+    margin-bottom: 1rem;
+
+    &-row {
+      display: flex;
+      flex-direction: row;
+      justify-content: space-between;
+
+      label {
+        margin-bottom: 0 !important;
+        padding-right: 0.5rem;
+      }
+    }
+  }
+
+  &__select {
+    display: flex;
+    flex-direction: column;
+    position: relative;
+
+    &:after {
+      content: '\2303';
+      transform: scaleY(-1);
+      pointer-events: none;
+      right: 0.5rem;
+      top: 0.2rem;
+      position: absolute;
+    }
+  }
+
+  label {
+    font-size: 0.9rem;
+    font-weight: 600;
+    margin-bottom: 0.25rem;
+  }
+
+  input {
+    padding: 0.5rem;
+    border-radius: 0.25rem;
+    border: 1px solid var(--brand-border);
+  }
+
+  select {
+    appearance: none;
+    padding: 0.5rem;
+    border-radius: 0.25rem;
+    border: 1px solid var(--brand-border);
+  }
+
+  button {
+    background-color: var(--brand-accent);
+    color: #ffffff;
+    font-weight: 700;
+    width: 100%;
+
+    border: none;
+    border-radius: 0.25rem;
+    margin-top: 1.25rem;
+    margin-bottom: 0.25rem;
+    padding: 0.75rem;
+    transition: all 0.1s ease;
+
+    cursor: pointer;
+
+    &:hover {
+      filter: brightness(80%);
+    }
+
+    &:focus {
+      outline: solid 2px var(--brand-focus);
+      outline-offset: 2px;
+    }
+  }
+}

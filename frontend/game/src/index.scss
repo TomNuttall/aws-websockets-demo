@@ -1,0 +1,78 @@
+[color-scheme='light'] {
+  color-scheme: light;
+
+  --brand-text: #213547;
+  --brand-focus: #213547;
+  --brand-background: #f4f4f4;
+  --brand-primary: white;
+  --brand-shadow: rgba(var(--brand-secondary), 0.1);
+  --brand-error: #ff2400;
+  --brand-accent: #3f51b5;
+  --brand-border: darkgrey;
+  --brand-icon: #24292f;
+}
+
+[color-scheme='dark'] {
+  color-scheme: dark;
+
+  --brand-text: #f4f4f4;
+  --brand-focus: #f4f4f4;
+  --brand-background: #121212;
+  --brand-primary: #2f2738;
+  --brand-shadow: rgba(var(--brand-secondary), 0.7);
+  --brand-error: #ff4b2f;
+  --brand-accent: #3f51b5;
+  --brand-border: darkgrey;
+  --brand-icon: white;
+}
+
+:root {
+  font-family: system-ui, sans-serif;
+  line-height: 1.5;
+  font-weight: 400;
+
+  font-synthesis: none;
+  text-rendering: optimizeLegibility;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  -webkit-text-size-adjust: 100%;
+
+  color: var(--brand-text);
+  background-color: var(--brand-background);
+
+  color-scheme: light dark;
+}
+
+body {
+  margin: 0;
+  padding: 0;
+}
+
+/* https://github.com/h5bp/main.css */
+.sr-only {
+  border: 0;
+  clip: rect(0, 0, 0, 0);
+  height: 1px;
+  margin: -1px;
+  overflow: hidden;
+  padding: 0;
+  position: absolute;
+  white-space: nowrap;
+  width: 1px;
+  /* 1 */
+}
+
+.panel {
+  width: 24rem;
+  background-color: var(--brand-primary);
+  border-radius: 0.5rem;
+  box-shadow: 0px 4px 16px -4px var(--brand-shadow);
+
+  padding: 1.5rem;
+}
+
+@media (max-width: 600px) {
+  .panel {
+    width: 18rem;
+  }
+}
