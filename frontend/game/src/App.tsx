@@ -5,6 +5,7 @@ import WaitPlayers from './containers/WaitPlayers'
 import WaitGame from './containers/WaitGame'
 import Results from './containers/Results'
 import Hud from './components/Hud'
+import toast from 'react-hot-toast'
 import './App.css'
 
 enum GameState {
@@ -20,16 +21,16 @@ export interface PlayerData {
 }
 
 interface GameData {
-  numPlayers: number
+  numConnections: number
   gameState: GameState
   players: PlayerData[]
 }
 
-const SOCKET_URL = 'wss://7mmhehm6rl.execute-api.eu-west-2.amazonaws.com/dev'
+const SOCKET_URL = 'wss://z9ssnwmz69.execute-api.eu-west-2.amazonaws.com/dev'
 
 const App: React.FC = () => {
   const [gameData, setGameData] = useState<GameData>({
-    numPlayers: 0,
+    numConnections: 0,
     gameState: GameState.CharacterSelect,
     players: [],
   })
@@ -41,10 +42,13 @@ const App: React.FC = () => {
     const gameData = JSON.parse(event.data)
 
     setGameData(gameData)
-    setMsgHistory((prevState: string[]) => {
-      prevState.push('onReceive')
-      return prevState
+    gameData.msgs.forEach((msg: string) => {
+      toast(msg)
     })
+    // setMsgHistory((prevState: string[]) => {
+    //   prevState.push(gameData.msgs)
+    //   return prevState
+    // })
   }
 
   const sendMessage = (playerData: PlayerData) => {
@@ -62,7 +66,7 @@ const App: React.FC = () => {
         return <CharacterSelect sendMessage={sendMessage} />
 
       case GameState.WaitPlayers:
-        return <WaitPlayers numPlayers={gameData.numPlayers} />
+        return <WaitPlayers numPlayers={gameData.players.length} />
 
       case GameState.WaitGame:
         return <WaitGame />
@@ -77,8 +81,12 @@ const App: React.FC = () => {
   return (
     <div className="container mx-auto">
       <div className="flex flex-col items-center">
-        <Hud numPlayers={gameData.numPlayers} msgHistory={msgHistory} />
         {readyState === ReadyState.OPEN && renderGameState(gameData.gameState)}
+        <Hud
+          numPlayers={gameData.players.length}
+          numConnections={gameData.numConnections}
+          msgHistory={msgHistory}
+        />
       </div>
     </div>
   )

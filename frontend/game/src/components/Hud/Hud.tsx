@@ -1,19 +1,19 @@
 import React from 'react'
+import { Toaster } from 'react-hot-toast'
 
 interface HudProps {
+  numConnections: number
   numPlayers: number
-  msgHistory: string[]
 }
 
-const Hud: React.FC<HudProps> = ({ numPlayers, msgHistory }) => {
+const Hud: React.FC<HudProps> = ({ numConnections, numPlayers }) => {
   return (
     <div>
-      <h1 className="text-3xl font-bold text-slate-900 dark:text-white">{`NumPlayers: ${numPlayers}`}</h1>
-      <ul>
-        {msgHistory.map((msg: string, index: number) => {
-          return <li key={index}>{msg}</li>
-        })}
-      </ul>
+      <div className="flex flex-row gap-4">
+        <p>{`Connected: ${numConnections}`}</p>
+        <p>{`Players: ${numPlayers}`}</p>
+      </div>
+      <Toaster position="bottom-center" reverseOrder={false} />
     </div>
   )
 }
