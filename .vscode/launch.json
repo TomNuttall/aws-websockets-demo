@@ -7,8 +7,15 @@
     {
       "type": "chrome",
       "request": "launch",
-      "name": "Launch Chrome against localhost",
-      "url": "http://localhost:5173",
+      "name": "Game",
+      "url": "http://localhost:5173/projects/game",
+      "webRoot": "${workspaceFolder}"
+    },
+    {
+      "type": "chrome",
+      "request": "launch",
+      "name": "Host",
+      "url": "http://localhost:5173/projects/xmas",
       "webRoot": "${workspaceFolder}"
     }
   ]

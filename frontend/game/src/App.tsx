@@ -34,7 +34,6 @@ const App: React.FC = () => {
     gameState: GameState.CharacterSelect,
     players: [],
   })
-  const [msgHistory, setMsgHistory] = useState<string[]>([])
 
   const onReceiveMessage = (event: any) => {
     console.log('onReceiveMessage: ', event)
@@ -45,10 +44,6 @@ const App: React.FC = () => {
     gameData.msgs.forEach((msg: string) => {
       toast(msg)
     })
-    // setMsgHistory((prevState: string[]) => {
-    //   prevState.push(gameData.msgs)
-    //   return prevState
-    // })
   }
 
   const sendMessage = (playerData: PlayerData) => {
@@ -85,7 +80,6 @@ const App: React.FC = () => {
         <Hud
           numPlayers={gameData.players.length}
           numConnections={gameData.numConnections}
-          msgHistory={msgHistory}
         />
       </div>
     </div>
