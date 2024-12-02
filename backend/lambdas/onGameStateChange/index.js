@@ -49,13 +49,15 @@ const getGameState = (state, playersState, hostState) => {
   } else if (state?.data || state.id === hostState.id) {
     gameState = 'waitPlayers'
   }
+  const playerData = playersState
+    .filter((state) => state?.data !== undefined)
+    .map((state) => state.data)
 
   const gameData = {
     numConnections: playersState.length,
     gameState,
-    players: playersState
-      .filter((state) => state?.data !== undefined)
-      .map((state) => state.data),
+    players:
+      state.id === hostState.id || hostState?.data?.finished ? playerData : [],
   }
 
   return gameData
