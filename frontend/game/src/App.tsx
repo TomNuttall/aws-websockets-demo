@@ -17,7 +17,7 @@ enum GameState {
 
 export interface PlayerData {
   name?: string
-  ready?: boolean
+  character?: number
 }
 
 interface GameData {
