@@ -41,18 +41,6 @@ export class BackendStack extends cdk.Stack {
       props.connectionsTable.tableName,
     )
 
-    const onSendHandler = this.createRouteLambda('onSend', [
-      new iam.PolicyStatement({
-        effect: iam.Effect.ALLOW,
-        actions: ['dynamodb:PutItem'],
-        resources: [props.connectionsTable.tableArn],
-      }),
-    ])
-    onSendHandler.addEnvironment(
-      'CONNECTIONS_TABLE_NAME',
-      props.connectionsTable.tableName,
-    )
-
     const webSocketApi = new apigwv2.WebSocketApi(
       this,
       'demo-santas-websocket-api',
@@ -78,10 +66,39 @@ export class BackendStack extends cdk.Stack {
       autoDeploy: true,
     })
 
+    const onSendHandler = this.createRouteLambda('onSend', [
+      new iam.PolicyStatement({
+        effect: iam.Effect.ALLOW,
+        actions: ['dynamodb:PutItem'],
+        resources: [props.connectionsTable.tableArn],
+      }),
+    ])
+    onSendHandler.addEnvironment(
+      'CONNECTIONS_TABLE_NAME',
+      props.connectionsTable.tableName,
+    )
     webSocketApi.addRoute('sendMessage', {
       integration: new apigwv2integrations.WebSocketLambdaIntegration(
         'SendMessageIntegration',
         onSendHandler,
+      ),
+    })
+
+    const onHostSendHandler = this.createRouteLambda('onHostSend', [
+      new iam.PolicyStatement({
+        effect: iam.Effect.ALLOW,
+        actions: ['dynamodb:PutItem'],
+        resources: [props.connectionsTable.tableArn],
+      }),
+    ])
+    onSendHandler.addEnvironment(
+      'CONNECTIONS_TABLE_NAME',
+      props.connectionsTable.tableName,
+    )
+    webSocketApi.addRoute('sendHostMessage', {
+      integration: new apigwv2integrations.WebSocketLambdaIntegration(
+        'SendHostMessageIntegration',
+        onHostSendHandler,
       ),
     })
 
@@ -152,6 +169,7 @@ export class BackendStack extends cdk.Stack {
           onConnectHandler.functionArn,
           onDisconnectHandler.functionArn,
           onSendHandler.functionArn,
+          onHostSendHandler.functionArn,
           onGameStateChangeHandler.functionArn,
         ],
       }),
