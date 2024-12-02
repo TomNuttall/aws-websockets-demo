@@ -55,9 +55,11 @@ const getGameState = (state, playersState, hostState) => {
 
   const gameData = {
     numConnections: playersState.length,
+    numPlayers: playerData.length,
     gameState,
     players:
       state.id === hostState.id || hostState?.data?.finished ? playerData : [],
+    position: 1,
   }
 
   return gameData
