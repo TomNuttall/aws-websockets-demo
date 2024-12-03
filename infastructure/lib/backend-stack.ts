@@ -69,7 +69,7 @@ export class BackendStack extends cdk.Stack {
     const onSendHandler = this.createRouteLambda('onSend', [
       new iam.PolicyStatement({
         effect: iam.Effect.ALLOW,
-        actions: ['dynamodb:PutItem'],
+        actions: ['dynamodb:UpdateItem'],
         resources: [props.connectionsTable.tableArn],
       }),
     ])
@@ -87,7 +87,7 @@ export class BackendStack extends cdk.Stack {
     const onHostSendHandler = this.createRouteLambda('onHostSend', [
       new iam.PolicyStatement({
         effect: iam.Effect.ALLOW,
-        actions: ['dynamodb:PutItem'],
+        actions: ['dynamodb:UpdateItem', 'dynamodb:Query'],
         resources: [props.connectionsTable.tableArn],
       }),
     ])
