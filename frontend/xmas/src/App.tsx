@@ -1,12 +1,12 @@
 import { useEffect, useState, useCallback } from 'react'
 import useWebSocket, { ReadyState } from 'react-use-websocket'
+import toast, { Toaster } from 'react-hot-toast'
 import { Application as PixiApplication } from '@pixi/app'
 import { Stage } from '@pixi/react'
 import AssetContextProvider from './Context/AssetContext'
-import Background from './Components/Background'
+import Background from './Containers/Background'
+import Players from './Containers/Players'
 import Hud from './Components/Hud'
-import Intro from './Containers/Intro'
-import WaitPlayers from './Containers/WaitPlayers'
 
 enum GameState {
   CharacterSelect = 'characterSelect',
@@ -43,32 +43,31 @@ function App() {
     gameState: GameState.CharacterSelect,
     players: [],
   })
-  const [_msgHistory, setMsgHistory] = useState<string[]>([])
 
   const onReceiveMessage = useCallback((event: any) => {
     const gameData = JSON.parse(event.data)
     console.log('onReceiveMessage: ', gameData)
     setGameData(gameData)
-    setMsgHistory((prevState: string[]) => {
-      prevState.push(gameData.msgs)
-      return prevState
+    gameData.msgs.forEach((msg: string) => {
+      toast.success(msg)
     })
 
     if (!animate && gameData.gameState === GameState.WaitGame) {
       setAnimate(true)
-      setTimeout(() => {
-        sendMessage({ finished: true })
-      }, 5000)
     }
   }, [])
 
   const sendMessage = useCallback((hostData: HostData) => {
     console.log('onHostSendMessage: ', hostData)
-    sendJsonMessage({ action: 'sendHostMessage', data: hostData })
+    sendJsonMessage({ action: 'sendHostMessage', host: hostData })
   }, [])
 
   const onStart = useCallback(() => {
     sendMessage({ started: true })
+  }, [])
+
+  const onFinish = useCallback(() => {
+    sendMessage({ finished: true })
   }, [])
 
   const { sendJsonMessage, readyState } = useWebSocket(socketUrl, {
@@ -93,27 +92,31 @@ function App() {
   }, [readyState])
 
   return (
-    <Stage
-      width={1280}
-      height={600}
-      onMount={(app: PixiApplication) => setApp(app)}
-    >
-      <AssetContextProvider>
-        <Background raceDuration={animate ? 60 * 60 : 0} onStart={onStart} />
-        {socketUrl.length === 0 && (
-          <Intro connect={() => setSocketUrl(SOCKET_URL)} />
-        )}
-        {readyState === ReadyState.OPEN && (
-          <>
-            <WaitPlayers players={gameData?.players ?? []} />
-            <Hud
-              numConnections={gameData?.numConnections}
-              numPlayers={gameData?.players?.length}
-            />
-          </>
-        )}
-      </AssetContextProvider>
-    </Stage>
+    <>
+      <Stage
+        width={1280}
+        height={600}
+        onMount={(app: PixiApplication) => setApp(app)}
+      >
+        <AssetContextProvider>
+          <Background
+            raceDuration={animate ? 60 * 60 : 0}
+            onStart={onStart}
+            onFinish={onFinish}
+          />
+
+          {readyState === ReadyState.OPEN && (
+            <Players players={gameData?.players ?? []} />
+          )}
+        </AssetContextProvider>
+      </Stage>
+      <Hud
+        numConnections={gameData?.numConnections}
+        numPlayers={gameData?.players?.length}
+        connect={() => setSocketUrl(SOCKET_URL)}
+      />
+      <Toaster position="bottom-center" reverseOrder={false} />
+    </>
   )
 }
 

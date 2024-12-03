@@ -5,7 +5,7 @@ export const manifest = {
       assets: [
         {
           name: 'game',
-          srcs: 'spritesheets/sprites.json',
+          srcs: 'spritesheets/character.json',
         },
       ],
     },

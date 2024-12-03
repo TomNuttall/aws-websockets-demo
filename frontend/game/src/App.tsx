@@ -1,12 +1,11 @@
 import React, { useState } from 'react'
 import useWebSocket, { ReadyState } from 'react-use-websocket'
-import { Toaster } from 'react-hot-toast'
+import toast, { Toaster } from 'react-hot-toast'
 import Game from './containers/Game'
 import CharacterSelect from './containers/CharacterSelect'
 import Character from './components/Character'
 import Header from './components/Header'
 import WaitPanel from './components/WaitPanel'
-import toast from 'react-hot-toast'
 import { formatOrdinals } from './utils/helper'
 
 import './App.scss'
@@ -91,11 +90,14 @@ const App: React.FC = () => {
         repo="https://github.com/TomNuttall/santa-shuffle"
       />
       <Toaster reverseOrder={false} />
-      <Game>
-        <Character width={200} height={200} player={player} />
-      </Game>
+
       {readyState === ReadyState.OPEN && (
-        <div className="app__main">{renderGameState(gameData.gameState)}</div>
+        <>
+          <Game>
+            <Character width={200} height={200} player={player} />
+          </Game>
+          <div className="app__main">{renderGameState(gameData.gameState)}</div>
+        </>
       )}
     </div>
   )

@@ -5,9 +5,14 @@ import { AssetContext } from '../../Context/AssetContext'
 interface BackgroundProps {
   raceDuration: number
   onStart: () => void
+  onFinish: () => void
 }
 
-const Background: React.FC<BackgroundProps> = ({ raceDuration, onStart }) => {
+const Background: React.FC<BackgroundProps> = ({
+  raceDuration,
+  onStart,
+  onFinish,
+}) => {
   const [timer, setTimer] = useState<number>(raceDuration)
   const [x, setX] = useState<number>(0)
 
@@ -18,7 +23,10 @@ const Background: React.FC<BackgroundProps> = ({ raceDuration, onStart }) => {
   }, [raceDuration])
 
   useTick((delta) => {
-    if (timer < 0) return
+    if (timer < 0) {
+      // onFinish()
+      return
+    }
 
     setX((x) => x - 0.45)
     setTimer((timer) => timer - delta)

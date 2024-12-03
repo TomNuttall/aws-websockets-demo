@@ -1,46 +1,21 @@
-import { TextStyle } from '@pixi/text'
-import { Container, Text } from '@pixi/react'
+import React from 'react'
+import './Hud.scss'
 
 interface HudProps {
   numConnections: number
   numPlayers: number
+  connect: () => void | undefined
 }
 
-const Hud: React.FC<HudProps> = ({ numConnections, numPlayers }) => {
-  const msg = `Connections: ${
-    numConnections > 1 ? numConnections - 1 : 0
-  } Players Ready: ${numPlayers}`
-  const newMsg = `... Joined`
-
+const Hud: React.FC<HudProps> = ({ numConnections, numPlayers, connect }) => {
   return (
-    <Container width={1280} height={600}>
-      <Text
-        text={msg}
-        anchor={0.5}
-        x={100}
-        y={580}
-        style={
-          new TextStyle({
-            align: 'center',
-            fill: '0x000000',
-            fontSize: 12,
-          })
-        }
-      />
-      <Text
-        text={newMsg}
-        anchor={0.5}
-        x={900}
-        y={580}
-        style={
-          new TextStyle({
-            align: 'center',
-            fill: '0x000000',
-            fontSize: 12,
-          })
-        }
-      />
-    </Container>
+    <div className="hud">
+      <div>{`Connections: ${numConnections > 1 ? numConnections - 1 : 0}`}</div>
+      {connect !== undefined && (
+        <button onClick={() => connect()}>Ready</button>
+      )}
+      <div>{`Players Ready: ${numPlayers}`}</div>
+    </div>
   )
 }
 
