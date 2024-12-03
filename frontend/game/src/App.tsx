@@ -26,7 +26,6 @@ interface GameData {
   numConnections: number
   numPlayers: number
   gameState: GameState
-  players: PlayerData[]
   position?: number
 }
 
@@ -38,7 +37,6 @@ const App: React.FC = () => {
     numConnections: 0,
     numPlayers: 0,
     gameState: GameState.CharacterSelect,
-    players: [],
   })
 
   const onReceiveMessage = (event: any) => {
