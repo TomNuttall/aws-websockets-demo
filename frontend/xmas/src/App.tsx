@@ -8,11 +8,11 @@ import Background from './Containers/Background'
 import Players from './Containers/Players'
 import Hud from './Components/Hud'
 
-enum GameState {
+export enum GameState {
   CharacterSelect = 'characterSelect',
   WaitPlayers = 'waitPlayers',
   WaitGame = 'waitGame',
-  Results = 'waitResults',
+  Results = 'results',
 }
 
 export interface HostData {
@@ -62,6 +62,10 @@ function App() {
     sendJsonMessage({ action: 'sendHostMessage', host: hostData })
   }, [])
 
+  const onConnect = useCallback(() => {
+    setSocketUrl(SOCKET_URL)
+  }, [])
+
   const onStart = useCallback(() => {
     sendMessage({ started: true })
   }, [])
@@ -99,11 +103,7 @@ function App() {
         onMount={(app: PixiApplication) => setApp(app)}
       >
         <AssetContextProvider>
-          <Background
-            raceDuration={animate ? 60 * 60 : 0}
-            onStart={onStart}
-            onFinish={onFinish}
-          />
+          <Background raceDuration={animate ? 60 * 60 : 0} />
 
           {readyState === ReadyState.OPEN && (
             <Players players={gameData?.players ?? []} />
@@ -113,7 +113,10 @@ function App() {
       <Hud
         numConnections={gameData?.numConnections}
         numPlayers={gameData?.players?.length}
-        connect={() => setSocketUrl(SOCKET_URL)}
+        gameState={gameData.gameState}
+        onConnect={onConnect}
+        onStart={onStart}
+        onFinish={onFinish}
       />
       <Toaster position="bottom-center" reverseOrder={false} />
     </>

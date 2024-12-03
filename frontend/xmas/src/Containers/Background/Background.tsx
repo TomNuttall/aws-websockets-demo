@@ -4,15 +4,9 @@ import { AssetContext } from '../../Context/AssetContext'
 
 interface BackgroundProps {
   raceDuration: number
-  onStart: () => void
-  onFinish: () => void
 }
 
-const Background: React.FC<BackgroundProps> = ({
-  raceDuration,
-  onStart,
-  onFinish,
-}) => {
+const Background: React.FC<BackgroundProps> = ({ raceDuration }) => {
   const [timer, setTimer] = useState<number>(raceDuration)
   const [x, setX] = useState<number>(0)
 
@@ -46,7 +40,7 @@ const Background: React.FC<BackgroundProps> = ({
   // stop tiling sprite
 
   return (
-    <Container width={1280} height={600} click={onStart} eventMode="static">
+    <Container width={1280} height={600}>
       <TilingSprite
         width={1280}
         height={600}
@@ -61,7 +55,6 @@ const Background: React.FC<BackgroundProps> = ({
         width={600}
         height={400}
         texture={textures?.igloo}
-        click={onStart}
       />
       {/* {x + 2560 < 1280 && (
         <Sprite
