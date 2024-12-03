@@ -44,9 +44,9 @@ const handler = async (event) => {
   const positions = host?.started
     ? await getGameResults(gameId, connectionId)
     : []
-  console.log('GAME RESULTS: ', positions)
-
+  console.log('GAME: ', positions)
   const data = host?.started ? { positions } : host
+
   const command = new UpdateItemCommand({
     TableName: CONNECTIONS_TABLE_NAME,
     Key: {
@@ -55,7 +55,7 @@ const handler = async (event) => {
     },
     UpdateExpression: 'SET #attrName = :attrValue',
     ExpressionAttributeNames: {
-      '#attrName': host?.started ? 'positions' : 'host',
+      '#attrName': host?.started ? 'results' : 'host',
     },
     ExpressionAttributeValues: {
       ':attrValue': { S: JSON.stringify(data) },

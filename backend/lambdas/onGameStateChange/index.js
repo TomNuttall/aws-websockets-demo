@@ -30,6 +30,10 @@ const getPlayersState = async (gameId) => {
       hostState = { id: row.connectionId, data: JSON.parse(row.host) }
     }
 
+    if (row?.results) {
+      hostState['results'] = JSON.parse(row.results)
+    }
+
     const data = row?.data ? JSON.parse(row.data) : undefined
     playersState.push({ id: row.connectionId, data })
   })
@@ -39,27 +43,42 @@ const getPlayersState = async (gameId) => {
 
 const getGameState = (state, playersState, hostState) => {
   let gameState = 'characterSelect'
-  if (hostState?.data?.finished) {
+  if (hostState?.results?.positions?.length > 0 && hostState?.data?.finished) {
     gameState = 'results'
   } else if (
     playersState.every((state) => state?.data || state.id === hostState.id) &&
-    hostState?.data?.started
+    hostState?.results?.positions?.length > 0
   ) {
     gameState = 'waitGame'
   } else if (state?.data || state.id === hostState.id) {
     gameState = 'waitPlayers'
   }
-  const playerData = playersState
-    .filter((state) => state?.data !== undefined)
-    .map((state) => state.data)
+
+  let playerData = playersState.filter((state) => state?.data !== undefined)
+  let position = undefined
+
+  if (hostState?.data?.finished) {
+    const positions = hostState?.results?.positions
+      ? hostState?.results?.positions
+      : undefined
+    if (state.id === hostState.id) {
+      playerData = playerData.map((player) => {
+        return { ...player.data, position: positions.indexOf(player.id) + 1 }
+      })
+    } else {
+      position = positions.indexOf(state.id) + 1
+    }
+  } else {
+    playerData = playerData.map((player) => player.data)
+  }
 
   const gameData = {
     numConnections: playersState.length,
     numPlayers: playerData.length,
     gameState,
-    players:
-      state.id === hostState.id || hostState?.data?.finished ? playerData : [],
-    position: 1,
+    position,
+    // Only for host
+    players: state.id === hostState.id ? playerData : undefined,
   }
 
   return gameData
@@ -107,14 +126,17 @@ export const handler = async (event) => {
   const msgs = getMsgs(event?.Records)
 
   const promises = playersState.map(async (state) => {
-    const data = getGameState(state, playersState, hostState)
-
+    const gameData = getGameState(state, playersState, hostState)
+    const data = JSON.stringify({ ...gameData, msgs })
     const requestParams = {
       ConnectionId: state.id,
-      Data: JSON.stringify({ ...data, msgs }),
+      Data: data,
     }
     const command = new PostToConnectionCommand(requestParams)
     await apiClient.send(command)
+
+    console.log('ConnectionId: ', state.id)
+    console.log('Data: ', data)
   })
 
   await Promise.all(promises)
