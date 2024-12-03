@@ -1,4 +1,4 @@
-import { DynamoDBClient, PutItemCommand } from '@aws-sdk/client-dynamodb'
+import { DynamoDBClient, UpdateItemCommand } from '@aws-sdk/client-dynamodb'
 
 const { CONNECTIONS_TABLE_NAME } = process.env
 const ddbClient = new DynamoDBClient()
@@ -8,7 +8,7 @@ const handler = async (event) => {
   const gameId = 'testing'
 
   const { data } = JSON.parse(event.body)
-  const command = new PutItemCommand({
+  const command = new UpdateItemCommand({
     TableName: CONNECTIONS_TABLE_NAME,
     Item: {
       gameId: { S: gameId },
