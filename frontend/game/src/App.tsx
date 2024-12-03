@@ -75,7 +75,9 @@ const App: React.FC = () => {
       case GameState.Results:
         return (
           <WaitPanel
-            msg={`You finished ${formatOrdinals(gameData?.position ?? 1)}`}
+            msg={`You finished ${formatOrdinals(
+              (gameData?.position ?? 0) + 1,
+            )}`}
           />
         )
     }
