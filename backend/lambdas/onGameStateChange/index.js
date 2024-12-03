@@ -57,19 +57,16 @@ const getGameState = (state, playersState, hostState) => {
   let playerData = playersState.filter((state) => state?.data !== undefined)
   let position = undefined
 
-  if (hostState?.data?.finished) {
-    const positions = hostState?.results?.positions
-      ? hostState?.results?.positions
-      : undefined
-    if (state.id === hostState.id) {
-      playerData = playerData.map((player) => {
-        return { ...player.data, position: positions.indexOf(player.id) + 1 }
-      })
-    } else {
-      position = positions.indexOf(state.id) + 1
-    }
-  } else {
-    playerData = playerData.map((player) => player.data)
+  const positions = hostState?.results?.positions
+    ? hostState?.results?.positions
+    : undefined
+  if (state.id === hostState.id) {
+    playerData = playerData.map((player) => {
+      position = positions?.indexOf(player.id)
+      return { ...player.data, position }
+    })
+  } else if (hostState?.data?.finished) {
+    position = positions?.indexOf(state.id)
   }
 
   const gameData = {
