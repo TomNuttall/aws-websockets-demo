@@ -8,7 +8,6 @@ interface HudProps {
   gameState: GameState
   onConnect: () => void
   onStart: () => void
-  onFinish: () => void
 }
 
 const Hud: React.FC<HudProps> = ({
@@ -17,31 +16,42 @@ const Hud: React.FC<HudProps> = ({
   gameState,
   onConnect,
   onStart,
-  onFinish,
 }) => {
   const onClick = () => {
     switch (gameState) {
       case GameState.CharacterSelect:
         onConnect()
         break
-
       case GameState.WaitPlayers:
         onStart()
-        break
-
-      case GameState.WaitGame:
-        onFinish()
         break
     }
   }
 
+  let buttonText = ''
+  switch (gameState) {
+    case GameState.CharacterSelect:
+      buttonText = 'Connect'
+      break
+    case GameState.WaitPlayers:
+      buttonText = 'Start Game'
+      break
+  }
+
   return (
     <div className="hud">
-      <div>{`Connections: ${numConnections > 1 ? numConnections - 1 : 0}`}</div>
-      {gameState !== GameState.Results && (
-        <button onClick={onClick}>{gameState}</button>
-      )}
-      <div>{`Players Ready: ${numPlayers}`}</div>
+      <div className="hud__info">
+        <div>{`Connections: ${numConnections}`}</div>
+        {numPlayers > 0 && (
+          <>
+            <div>{`Players: ${numPlayers}`}</div>
+            {gameState === GameState.WaitPlayers && (
+              <div>{`Ready: ${numConnections - 1 === numPlayers}`}</div>
+            )}
+          </>
+        )}
+      </div>
+      {buttonText.length > 0 && <button onClick={onClick}>{buttonText}</button>}
     </div>
   )
 }

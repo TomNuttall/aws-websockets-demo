@@ -1,4 +1,10 @@
 .hud {
   display: flex;
-  justify-content: space-around;
+  justify-content: space-between;
+
+  &__info {
+    display: flex;
+    flex-direction: row;
+    gap: 2rem;
+  }
 }

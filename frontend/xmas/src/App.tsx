@@ -4,6 +4,7 @@ import toast, { Toaster } from 'react-hot-toast'
 import { Application as PixiApplication } from '@pixi/app'
 import { Stage } from '@pixi/react'
 import AssetContextProvider from './Context/AssetContext'
+import Annoucements from './Containers/Annoucements'
 import Background from './Containers/Background'
 import Players from './Containers/Players'
 import Hud from './Components/Hud'
@@ -22,8 +23,9 @@ export interface HostData {
 }
 
 export interface PlayerData {
-  name?: string
+  name: string
   character: number
+  position?: number
 }
 
 interface GameData {
@@ -34,7 +36,7 @@ interface GameData {
 
 const SOCKET_URL = 'wss://z9ssnwmz69.execute-api.eu-west-2.amazonaws.com/dev'
 
-function App() {
+const App = () => {
   const [app, setApp] = useState<PixiApplication>()
   const [animate, setAnimate] = useState<boolean>(false)
   const [socketUrl, setSocketUrl] = useState<string>('')
@@ -51,10 +53,6 @@ function App() {
     gameData.msgs.forEach((msg: string) => {
       toast.success(msg)
     })
-
-    if (!animate && gameData.gameState === GameState.WaitGame) {
-      setAnimate(true)
-    }
   }, [])
 
   const sendMessage = useCallback((hostData: HostData) => {
@@ -72,6 +70,7 @@ function App() {
 
   const onFinish = useCallback(() => {
     sendMessage({ finished: true })
+    setAnimate(false)
   }, [])
 
   const { sendJsonMessage, readyState } = useWebSocket(socketUrl, {
@@ -103,11 +102,21 @@ function App() {
         onMount={(app: PixiApplication) => setApp(app)}
       >
         <AssetContextProvider>
-          <Background raceDuration={animate ? 60 * 60 : 0} />
-
-          {readyState === ReadyState.OPEN && (
-            <Players players={gameData?.players ?? []} />
-          )}
+          <Background
+            gameState={gameData.gameState}
+            raceDuration={animate ? 60 * 20 : undefined}
+            onFinish={onFinish}
+          />
+          <Players
+            gameState={gameData.gameState}
+            animate={animate}
+            players={gameData?.players ?? []}
+          />
+          <Annoucements
+            gameState={gameData.gameState}
+            players={gameData?.players ?? []}
+            onStart={() => setAnimate(true)}
+          />
         </AssetContextProvider>
       </Stage>
       <Hud
@@ -116,7 +125,6 @@ function App() {
         gameState={gameData.gameState}
         onConnect={onConnect}
         onStart={onStart}
-        onFinish={onFinish}
       />
       <Toaster position="bottom-center" reverseOrder={false} />
     </>
