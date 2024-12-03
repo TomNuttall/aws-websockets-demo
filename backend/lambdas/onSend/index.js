@@ -10,10 +10,16 @@ const handler = async (event) => {
   const { data } = JSON.parse(event.body)
   const command = new UpdateItemCommand({
     TableName: CONNECTIONS_TABLE_NAME,
-    Item: {
+    Key: {
       gameId: { S: gameId },
       connectionId: { S: connectionId },
-      data: { S: JSON.stringify(data) },
+    },
+    UpdateExpression: 'SET #attrName = :attrValue',
+    ExpressionAttributeNames: {
+      '#attrName': 'data',
+    },
+    ExpressionAttributeValues: {
+      ':attrValue': { S: JSON.stringify(data) },
     },
   })
 
