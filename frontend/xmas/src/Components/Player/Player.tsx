@@ -60,7 +60,7 @@ const Player: React.FC<PlayerProps> = ({
   }, [gameState])
 
   const drawRectangle = useCallback(
-    (g) => {
+    (g: any) => {
       g.clear()
       g.lineStyle(1, 0x000000)
       g.beginFill(0xffffff)
@@ -71,7 +71,7 @@ const Player: React.FC<PlayerProps> = ({
   )
 
   const drawCircle = useCallback(
-    (g) => {
+    (g: any) => {
       g.clear()
       g.lineStyle(1, 0x000000)
       g.beginFill(0xffcccb)

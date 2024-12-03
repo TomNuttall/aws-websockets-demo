@@ -1,4 +1,3 @@
-import { useCallback } from 'react'
 import { Container } from '@pixi/react'
 import Player from '../../Components/Player'
 import { GameState, PlayerData } from '../../App'

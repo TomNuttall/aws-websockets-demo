@@ -24,7 +24,7 @@ const Background: React.FC<BackgroundProps> = ({
   }, [raceDuration])
 
   useTick((delta) => {
-    if (!timer || timer < 0) {
+    if (timer === undefined || timer < 0) {
       if (raceDuration && gameState === GameState.WaitGame) {
         onFinish()
       }
@@ -32,7 +32,11 @@ const Background: React.FC<BackgroundProps> = ({
     }
 
     setX((x) => x - 1.85)
-    setTimer((timer) => timer - delta)
+
+    setTimer((timer) => {
+      if (timer === undefined) return 0
+      return timer - delta
+    })
   })
 
   if (!assetsLoaded) return <></>
