@@ -25,6 +25,7 @@ export interface HostData {
 export interface PlayerData {
   name: string
   character: number
+  tint: string
   position?: number
 }
 

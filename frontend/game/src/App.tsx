@@ -20,6 +20,7 @@ enum GameState {
 export interface PlayerData {
   name?: string
   character?: number
+  tint?: string
 }
 
 interface GameData {

@@ -13,6 +13,9 @@ const TEXTURE_LOOKUP: Record<string, string> = {
   'character-1': 'penguin',
   'character-2': 'snowman',
   'character-3': 'dalek',
+  'character-4': 'hippo',
+  'character-5': 'reindeer',
+  'character-6': 'grinch',
 }
 
 const Character: React.FC<PlayerProps> = ({ width, height, player }) => {
@@ -26,6 +29,7 @@ const Character: React.FC<PlayerProps> = ({ width, height, player }) => {
           width={height}
           height={height}
           texture={textures[textureName]}
+          tint={player?.tint}
         />
       )}
     </Container>

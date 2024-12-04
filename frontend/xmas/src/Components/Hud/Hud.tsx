@@ -51,7 +51,14 @@ const Hud: React.FC<HudProps> = ({
           </>
         )}
       </div>
-      {buttonText.length > 0 && <button onClick={onClick}>{buttonText}</button>}
+      <div className="hud__info">
+        <a href="https://tomnuttall.dev/projects/game">
+          https://tomnuttall.dev/projects/game
+        </a>
+        {buttonText.length > 0 && (
+          <button onClick={onClick}>{buttonText}</button>
+        )}
+      </div>
     </div>
   )
 }

@@ -10,4 +10,12 @@
     margin-top: 0.5rem;
     text-align: center;
   }
+
+  &__tint {
+    margin-top: 1rem;
+
+    input {
+      width: 100%;
+    }
+  }
 }

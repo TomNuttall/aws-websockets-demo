@@ -1,5 +1,5 @@
-import { useContext, useEffect, useState } from 'react'
-import { Container, TilingSprite, Sprite, useTick } from '@pixi/react'
+import { useCallback, useContext, useEffect, useState } from 'react'
+import { Container, TilingSprite, Sprite, Graphics, useTick } from '@pixi/react'
 import { AssetContext } from '../../Context/AssetContext'
 import { GameState } from '../../App'
 
@@ -39,6 +39,14 @@ const Background: React.FC<BackgroundProps> = ({
     })
   })
 
+  const drawRectangle = useCallback((g: any) => {
+    g.clear()
+    g.lineStyle(1, 0x000000)
+    g.beginFill(0xffffff, 0.25)
+    g.drawRect(0, 0, 1280, 720)
+    g.endFill()
+  }, [])
+
   if (!assetsLoaded) return <></>
 
   return (
@@ -70,8 +78,7 @@ const Background: React.FC<BackgroundProps> = ({
         height={400}
         texture={textures?.igloo}
       />
-
-      {/* <Graphics width={1280} height={720} isMask={true}></Graphics>  */}
+      {gameState !== GameState.WaitGame && <Graphics draw={drawRectangle} />}
     </Container>
   )
 }

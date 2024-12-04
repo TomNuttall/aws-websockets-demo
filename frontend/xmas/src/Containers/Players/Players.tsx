@@ -33,19 +33,20 @@ const Players: React.FC<PlayersProps> = ({
             break
 
           case GameState.WaitGame: {
-            x = 200 + index * 5
-            y = 475
+            x = 100
+            y = 425 + (Math.floor(Math.random() * 50) + 50)
             break
           }
         }
 
         return (
           <Player
-            key={player.name}
+            key={`${player.name}_${index}`}
             gameState={gameState}
             player={player}
             position={{ x, y }}
             raceDuration={raceDuration}
+            numPlayers={players.length}
           />
         )
       })}

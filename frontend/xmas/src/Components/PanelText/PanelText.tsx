@@ -23,7 +23,7 @@ const PanelText: React.FC<PanelTextProps> = ({ msg, showOnFinish, scale }) => {
       onResolve: () => {
         setTimeout(() => {
           setVisible(showOnFinish)
-        }, 1000)
+        }, 2000)
       },
     }
   }, [msg])

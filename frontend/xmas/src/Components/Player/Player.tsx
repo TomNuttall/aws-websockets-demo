@@ -11,16 +11,17 @@ const TEXTURE_LOOKUP: Record<string, string> = {
   'character-1': 'penguin',
   'character-2': 'snowman',
   'character-3': 'dalek',
-  'character-4': 'santa',
+  'character-4': 'hippo',
   'character-5': 'reindeer',
-  'character-6': 'elf',
+  'character-6': 'grinch',
 }
 
 interface PlayerProps {
   gameState: GameState
   player: PlayerData
   position: { x: number; y: number }
-  raceDuration: number
+  raceDuration: number | undefined
+  numPlayers: number
 }
 
 const Player: React.FC<PlayerProps> = ({
@@ -28,6 +29,7 @@ const Player: React.FC<PlayerProps> = ({
   player,
   position,
   raceDuration,
+  numPlayers,
 }) => {
   const [offset, setOffset] = useState<number>(0)
   const [size, setSize] = useState<number>(1)
@@ -53,14 +55,37 @@ const Player: React.FC<PlayerProps> = ({
 
     // Near end of race force positions to winning ones
     if (raceTimer < Math.floor(Math.random() * 50) + 75) {
-      setOffset(700 - (player?.position ?? 0) * 100)
+      const position = player?.position ?? 0
+      let distance = 0
+      if (position < 3) {
+        distance = 1085 - position * 100
+      } else if (position < 10) {
+        distance = 800 - position * 75
+      } else {
+        distance = 500 - position * 50
+      }
+      setOffset(distance)
       return
     }
 
     setTimer((timer) => timer - delta)
     if (timer < 0) {
-      setTimer(Math.floor(Math.random() * 30) + 40)
-      setOffset(Math.floor(Math.random() * 1000))
+      setTimer(Math.floor(Math.random() * 60) + 40)
+      const chance = Math.random() * 10
+      const scalePlayer = numPlayers > 10 ? Math.floor(Math.random() * 3) : 1
+      let maxDistance = 300
+      if (chance > 9 && scalePlayer === 1) {
+        maxDistance = 1075
+      } else if (chance > 8 && scalePlayer === 1) {
+        maxDistance = 875
+      } else if (chance > 5 && scalePlayer === 1) {
+        maxDistance = 600
+      } else if (chance > 4 && scalePlayer === 1) {
+        maxDistance = 450
+      } else if (numPlayers > 10) {
+        maxDistance = -500
+      }
+      setOffset(Math.floor(Math.random() * maxDistance))
     }
   })
 
@@ -74,7 +99,7 @@ const Player: React.FC<PlayerProps> = ({
       from: { x: 0, y: 0 },
       to: { x: 5, y: 1 },
       config: { tension: 30, friction: 10 },
-      loop: raceDuration > 0,
+      loop: raceDuration && raceDuration > 0,
       reset: true,
     }),
     [raceDuration],
@@ -122,6 +147,7 @@ const Player: React.FC<PlayerProps> = ({
           anchor={0.5}
           texture={textures[textureName]}
           {...springs}
+          tint={player.tint}
         />
       )}
       <Graphics draw={drawRectangle} name={'textBkgd'} />

@@ -2,11 +2,27 @@
 
 "dalek":
 {
-	"frame": {"x":1,"y":1063,"w":558,"h":872},
-	"rotated": true,
+	"frame": {"x":1416,"y":1,"w":558,"h":872},
+	"rotated": false,
 	"trimmed": true,
 	"spriteSourceSize": {"x":238,"y":5,"w":558,"h":872},
 	"sourceSize": {"w":900,"h":960}
+},
+"grinch":
+{
+	"frame": {"x":1,"y":1063,"w":700,"h":911},
+	"rotated": true,
+	"trimmed": true,
+	"spriteSourceSize": {"x":29,"y":29,"w":700,"h":911},
+	"sourceSize": {"w":758,"h":967}
+},
+"hippo":
+{
+	"frame": {"x":503,"y":1,"w":911,"h":930},
+	"rotated": false,
+	"trimmed": true,
+	"spriteSourceSize": {"x":29,"y":30,"w":911,"h":930},
+	"sourceSize": {"w":969,"h":989}
 },
 "penguin":
 {
@@ -16,9 +32,17 @@
 	"spriteSourceSize": {"x":0,"y":0,"w":500,"h":1060},
 	"sourceSize": {"w":500,"h":1060}
 },
+"reindeer":
+{
+	"frame": {"x":914,"y":933,"w":380,"h":500},
+	"rotated": true,
+	"trimmed": true,
+	"spriteSourceSize": {"x":60,"y":0,"w":380,"h":500},
+	"sourceSize": {"w":500,"h":500}
+},
 "snowman":
 {
-	"frame": {"x":503,"y":1,"w":504,"h":700},
+	"frame": {"x":1416,"y":875,"w":504,"h":700},
 	"rotated": false,
 	"trimmed": true,
 	"spriteSourceSize": {"x":23,"y":23,"w":504,"h":700},
@@ -29,8 +53,8 @@
 	"version": "1.1",
 	"image": "character.png",
 	"format": "RGBA8888",
-	"size": {"w":1008,"h":1622},
+	"size": {"w":1975,"h":1764},
 	"scale": "1",
-	"smartupdate": "$TexturePacker:SmartUpdate:91003c0f99d48f45a5df9c976de325be:688740b8fd859252ed5b0ceb14cd63e9:42e475aa4a03af306bdc7acb5ff91d19$"
+	"smartupdate": "$TexturePacker:SmartUpdate:22c54818e165bfed82efff58b00de6b2:4c5f971b4fac9f84c4b66d76ea883d5d:42e475aa4a03af306bdc7acb5ff91d19$"
 }
 }
