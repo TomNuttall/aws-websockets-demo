@@ -97,7 +97,7 @@ const Player: React.FC<PlayerProps> = ({
   const [springs] = useSpring(
     () => ({
       from: { x: 0, y: 0 },
-      to: { x: 5, y: 1 },
+      to: { x: 5, y: 3 },
       config: { tension: 30, friction: 10 },
       loop: raceDuration && raceDuration > 0,
       reset: true,

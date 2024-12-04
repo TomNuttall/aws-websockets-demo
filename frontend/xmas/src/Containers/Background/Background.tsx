@@ -71,7 +71,7 @@ const Background: React.FC<BackgroundProps> = ({
 
       <Sprite
         name={'finish'}
-        x={6900 + x}
+        x={12900 + x}
         y={400}
         anchor={0.5}
         width={600}

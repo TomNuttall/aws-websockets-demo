@@ -28,7 +28,7 @@ const Annoucements: React.FC<AnnoucementsProps> = ({
       {gameState === GameState.WaitGame && (
         <CountdownPanel duration={3} finishMsg={'Go !!!'} onFinish={onStart} />
       )}
-      {gameState === GameState.Results && (
+      {gameState === GameState.Results && sortedPlayers.length > 0 && (
         <PanelText
           msg={`${sortedPlayers[0].name} Wins !!!`}
           showOnFinish={false}
