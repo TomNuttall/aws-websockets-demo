@@ -9,7 +9,7 @@ export const manifest = {
         },
         {
           name: 'character',
-          srcs: 'spritesheets/character.json',
+          srcs: 'spritesheets/character-v1.json',
         },
       ],
     },
