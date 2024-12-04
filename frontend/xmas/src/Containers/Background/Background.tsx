@@ -31,7 +31,7 @@ const Background: React.FC<BackgroundProps> = ({
       return
     }
 
-    setX((x) => x - 1.85)
+    setX((x) => x - 10)
 
     setRaceTimer((prevRaceTimer) => {
       if (prevRaceTimer === undefined) return 0
@@ -48,6 +48,8 @@ const Background: React.FC<BackgroundProps> = ({
   }, [])
 
   if (!assetsLoaded) return <></>
+
+  console.log('TOM: ', textures)
 
   return (
     <Container width={1280} height={600} name={'background'}>
@@ -71,14 +73,26 @@ const Background: React.FC<BackgroundProps> = ({
 
       <Sprite
         name={'finish'}
-        x={3000 + x}
+        x={6900 + x}
         y={400}
         anchor={0.5}
         width={600}
         height={400}
         texture={textures?.igloo}
       />
+
       {gameState !== GameState.WaitGame && <Graphics draw={drawRectangle} />}
+      {gameState === GameState.WaitPlayers && (
+        <Sprite
+          name={'finish'}
+          x={1150}
+          y={475}
+          anchor={0.5}
+          width={200}
+          height={200}
+          texture={textures?.qrcode}
+        />
+      )}
     </Container>
   )
 }

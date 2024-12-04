@@ -159,6 +159,7 @@ const Player: React.FC<PlayerProps> = ({
         text={player.name}
         style={
           new TextStyle({
+            fontFamily: 'Ubuntu Sans',
             align: 'center',
             fill: '0x000000',
             fontSize: 12 * size,
@@ -176,6 +177,7 @@ const Player: React.FC<PlayerProps> = ({
             text={`${formatOrdinals((player?.position ?? 0) + 1)}`}
             style={
               new TextStyle({
+                fontFamily: 'Ubuntu Sans',
                 align: 'center',
                 fill: '0x000000',
                 fontSize: 18,

@@ -127,7 +127,7 @@ const App = () => {
         onConnect={onConnect}
         onStart={onStart}
       />
-      <Toaster position="bottom-center" reverseOrder={false} />
+      <Toaster reverseOrder={false} />
     </>
   )
 }

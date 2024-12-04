@@ -5,7 +5,7 @@ export const manifest = {
       assets: [
         {
           name: 'background',
-          srcs: 'spritesheets/background.json',
+          srcs: 'spritesheets/backgroundv1.json',
         },
         {
           name: 'character',

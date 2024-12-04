@@ -51,7 +51,7 @@ const PanelText: React.FC<PanelTextProps> = ({ msg, showOnFinish, scale }) => {
         style={
           new TextStyle({
             align: 'center',
-            fontFamily: 'Comic Sans MS',
+            fontFamily: 'Ubuntu Sans',
             fill: '#ffffff',
             stroke: '#000000',
             strokeThickness: 3,
