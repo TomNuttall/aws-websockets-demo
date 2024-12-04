@@ -14,17 +14,17 @@ const Background: React.FC<BackgroundProps> = ({
   raceDuration,
   onFinish,
 }) => {
-  const [timer, setTimer] = useState<number | undefined>(undefined)
+  const [raceTimer, setRaceTimer] = useState<number | undefined>(undefined)
   const [x, setX] = useState<number>(0)
 
   const { textures, assetsLoaded } = useContext(AssetContext)
 
   useEffect(() => {
-    setTimer(raceDuration)
+    setRaceTimer(raceDuration)
   }, [raceDuration])
 
   useTick((delta) => {
-    if (timer === undefined || timer < 0) {
+    if (raceTimer === undefined || raceTimer < 0) {
       if (raceDuration && gameState === GameState.WaitGame) {
         onFinish()
       }
@@ -33,9 +33,9 @@ const Background: React.FC<BackgroundProps> = ({
 
     setX((x) => x - 1.85)
 
-    setTimer((timer) => {
-      if (timer === undefined) return 0
-      return timer - delta
+    setRaceTimer((prevRaceTimer) => {
+      if (prevRaceTimer === undefined) return 0
+      return prevRaceTimer - delta
     })
   })
 

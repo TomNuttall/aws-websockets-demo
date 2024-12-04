@@ -3,12 +3,16 @@ import Player from '../../Components/Player'
 import { GameState, PlayerData } from '../../App'
 
 interface PlayersProps {
-  animate: boolean
   gameState: GameState
+  raceDuration: number | undefined
   players: PlayerData[]
 }
 
-const Players: React.FC<PlayersProps> = ({ animate, gameState, players }) => {
+const Players: React.FC<PlayersProps> = ({
+  gameState,
+  raceDuration,
+  players,
+}) => {
   const sortedPlayers =
     gameState === GameState.Results
       ? players.sort((a, b) => (a?.position ?? 0) - (b?.position ?? 0))
@@ -41,7 +45,7 @@ const Players: React.FC<PlayersProps> = ({ animate, gameState, players }) => {
             gameState={gameState}
             player={player}
             position={{ x, y }}
-            animate={animate}
+            raceDuration={raceDuration}
           />
         )
       })}

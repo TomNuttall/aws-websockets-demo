@@ -11,26 +11,51 @@ const TEXTURE_LOOKUP: Record<string, string> = {
   'character-1': 'penguin',
   'character-2': 'snowman',
   'character-3': 'dalek',
+  'character-4': 'santa',
+  'character-5': 'reindeer',
+  'character-6': 'elf',
 }
 
 interface PlayerProps {
   gameState: GameState
   player: PlayerData
   position: { x: number; y: number }
-  animate: boolean
+  raceDuration: number
 }
 
 const Player: React.FC<PlayerProps> = ({
   gameState,
   player,
   position,
-  animate,
+  raceDuration,
 }) => {
   const [offset, setOffset] = useState<number>(0)
   const [size, setSize] = useState<number>(1)
   const [timer, setTimer] = useState<number>(0)
+  const [raceTimer, setRaceTimer] = useState<number | undefined>(undefined)
+
+  useEffect(() => {
+    setRaceTimer(raceDuration)
+  }, [raceDuration])
+
   useTick((delta) => {
-    if (!animate) return
+    if (raceTimer === undefined || raceTimer < 0) {
+      if (gameState === GameState.Results) {
+        setOffset(0)
+      }
+      return
+    }
+
+    setRaceTimer((prevRaceTimer) => {
+      if (prevRaceTimer === undefined) return 0
+      return prevRaceTimer - delta
+    })
+
+    // Near end of race force positions to winning ones
+    if (raceTimer < Math.floor(Math.random() * 50) + 75) {
+      setOffset(700 - (player?.position ?? 0) * 100)
+      return
+    }
 
     setTimer((timer) => timer - delta)
     if (timer < 0) {
@@ -49,10 +74,10 @@ const Player: React.FC<PlayerProps> = ({
       from: { x: 0, y: 0 },
       to: { x: 5, y: 1 },
       config: { tension: 30, friction: 10 },
-      loop: animate,
+      loop: raceDuration > 0,
       reset: true,
     }),
-    [animate],
+    [raceDuration],
   )
 
   useEffect(() => {

@@ -109,7 +109,7 @@ const App = () => {
           />
           <Players
             gameState={gameData.gameState}
-            animate={animate}
+            raceDuration={animate ? 60 * 20 : undefined}
             players={gameData?.players ?? []}
           />
           <Annoucements
