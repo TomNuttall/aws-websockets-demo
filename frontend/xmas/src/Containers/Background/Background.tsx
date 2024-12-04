@@ -49,8 +49,6 @@ const Background: React.FC<BackgroundProps> = ({
 
   if (!assetsLoaded) return <></>
 
-  console.log('TOM: ', textures)
-
   return (
     <Container width={1280} height={600} name={'background'}>
       <TilingSprite
