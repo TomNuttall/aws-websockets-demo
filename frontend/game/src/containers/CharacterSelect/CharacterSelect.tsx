@@ -39,9 +39,8 @@ const CharacterSelect: React.FC<CharacterSelectProps> = ({
           <input id="name" {...register('name', { required: true })} />
         </div>
         <div>
-          <div className="form__input-row">
+          <div className="character-select__options">
             <div className="form__input-row">
-              <label htmlFor="penguin">Penguin</label>
               <input
                 type="radio"
                 id="penguin"
@@ -49,53 +48,54 @@ const CharacterSelect: React.FC<CharacterSelectProps> = ({
                 defaultChecked={true}
                 {...register('character', { required: true })}
               />
+              <label htmlFor="penguin">Penguin</label>
             </div>
             <div className="form__input-row">
-              <label htmlFor="snowman">Snowman</label>
               <input
                 type="radio"
                 id="snowman"
                 value={2}
                 {...register('character', { required: true })}
               />
+              <label htmlFor="snowman">Snowman</label>
             </div>
             <div className="form__input-row">
-              <label htmlFor="dalek">Dalek</label>
               <input
                 type="radio"
                 id="dalek"
                 value={3}
                 {...register('character', { required: true })}
               />
+              <label htmlFor="dalek">Dalek</label>
             </div>
           </div>
-          <div className="form__input-row">
+          <div className="character-select__options">
             <div className="form__input-row">
-              <label htmlFor="hippo">Hippo</label>
               <input
                 type="radio"
                 id="hippo"
                 value={4}
                 {...register('character', { required: true })}
               />
+              <label htmlFor="hippo">Hippo</label>
             </div>
             <div className="form__input-row">
-              <label htmlFor="reindeer">Reindeer</label>
               <input
                 type="radio"
                 id="reindeer"
                 value={5}
                 {...register('character', { required: true })}
               />
+              <label htmlFor="reindeer">Reindeer</label>
             </div>
             <div className="form__input-row">
-              <label htmlFor="grinch">Grinch</label>
               <input
                 type="radio"
                 id="grinch"
                 value={6}
                 {...register('character', { required: true })}
               />
+              <label htmlFor="grinch">Grinch</label>
             </div>
           </div>
         </div>

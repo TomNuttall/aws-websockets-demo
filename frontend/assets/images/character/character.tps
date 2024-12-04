@@ -124,7 +124,7 @@
             <key>data</key>
             <struct type="DataFile">
                 <key>name</key>
-                <filename>../../export/character.json</filename>
+                <filename>../../export/character_v2.json</filename>
             </struct>
         </map>
         <key>multiPackMode</key>
@@ -188,6 +188,36 @@
                 <key>scale9FromFile</key>
                 <false/>
             </struct>
+            <key type="filename">grinch.png</key>
+            <struct type="IndividualSpriteSettings">
+                <key>pivotPoint</key>
+                <point_f>0,0</point_f>
+                <key>spriteScale</key>
+                <double>1</double>
+                <key>scale9Enabled</key>
+                <false/>
+                <key>scale9Borders</key>
+                <rect>190,242,379,483</rect>
+                <key>scale9Paddings</key>
+                <rect>190,242,379,483</rect>
+                <key>scale9FromFile</key>
+                <false/>
+            </struct>
+            <key type="filename">hippo.png</key>
+            <struct type="IndividualSpriteSettings">
+                <key>pivotPoint</key>
+                <point_f>0,0</point_f>
+                <key>spriteScale</key>
+                <double>1</double>
+                <key>scale9Enabled</key>
+                <false/>
+                <key>scale9Borders</key>
+                <rect>242,247,485,495</rect>
+                <key>scale9Paddings</key>
+                <rect>242,247,485,495</rect>
+                <key>scale9FromFile</key>
+                <false/>
+            </struct>
             <key type="filename">penguin.png</key>
             <struct type="IndividualSpriteSettings">
                 <key>pivotPoint</key>
@@ -200,6 +230,21 @@
                 <rect>125,265,250,530</rect>
                 <key>scale9Paddings</key>
                 <rect>125,265,250,530</rect>
+                <key>scale9FromFile</key>
+                <false/>
+            </struct>
+            <key type="filename">reindeer.png</key>
+            <struct type="IndividualSpriteSettings">
+                <key>pivotPoint</key>
+                <point_f>0,0</point_f>
+                <key>spriteScale</key>
+                <double>1</double>
+                <key>scale9Enabled</key>
+                <false/>
+                <key>scale9Borders</key>
+                <rect>125,125,250,250</rect>
+                <key>scale9Paddings</key>
+                <rect>125,125,250,250</rect>
                 <key>scale9FromFile</key>
                 <false/>
             </struct>
