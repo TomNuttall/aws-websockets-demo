@@ -106,7 +106,8 @@ const CharacterSelect: React.FC<CharacterSelectProps> = ({
           <input
             type="color"
             id="tint"
-            value={'#ffffff'}
+            defaultValue={'#ffffff'}
+            value={tint}
             {...register('tint', { required: true })}
           />
         </div>
