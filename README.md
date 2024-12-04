@@ -29,12 +29,16 @@ Note: Websocket handles unique connection id
 
 ## Backend
 
+Uses S3, Route53, Cloudfront, API Gateway, DynamoDB, Lambda and IAM AWS Services.
+
 - CDK used for IaC
 - DynamoDB table stores connection id and player/host state
 - DynamoDB streams trigger a lambda to handle game logic and 'broadcast' to all connections
 - WebSocket API Gateway with lambda route integrations
 
-### GitHub Env
+### GitHub
+
+Github actions used for CI/CD
 
 | Name                | Reason                                         |
 | ------------------- | ---------------------------------------------- |
