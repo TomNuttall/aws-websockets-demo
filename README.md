@@ -6,7 +6,12 @@ The api has an endpoint for connecting to and an endpoint to send messages back.
 
 
 
-https://github.com/user-attachments/assets/59d749e1-802c-40ad-b6f1-131464f46752
+[Host](https://github.com/user-attachments/assets/59d749e1-802c-40ad-b6f1-131464f46752)
+
+
+[Client](https://github.com/user-attachments/assets/49c8b2c9-69be-491c-9450-30bcefa4ea48)
+
+
 
 
 
