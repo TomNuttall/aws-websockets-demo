@@ -4,6 +4,12 @@ Demo Project: Web socket api used to handle communication between connected game
 
 The api has an endpoint for connecting to and an endpoint to send messages back.
 
+
+
+https://github.com/user-attachments/assets/59d749e1-802c-40ad-b6f1-131464f46752
+
+
+
 ## Game Flow
 
 Note: Websocket handles unique connection id
