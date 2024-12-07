@@ -1,68 +1,28 @@
 import React, { useState } from 'react'
-import useWebSocket, { ReadyState } from 'react-use-websocket'
-import toast, { Toaster } from 'react-hot-toast'
-import Game from './containers/Game'
+import useGameState from './hooks/useGameState'
+import PixiApp from './containers/PixiApp'
 import CharacterSelect from './containers/CharacterSelect'
 import Character from './components/Character'
 import Header from './components/Header'
+import Toast from './components/Toast'
 import WaitPanel from './components/WaitPanel'
 import { formatOrdinals } from './utils/helper'
+import { CharacterSelectData } from './types'
+import { GameState } from './hooks/useGameState'
 
 import './App.scss'
 
-enum GameState {
-  CharacterSelect = 'characterSelect',
-  WaitPlayers = 'waitPlayers',
-  WaitGame = 'waitGame',
-  Results = 'results',
-}
-
-export interface PlayerData {
-  name?: string
-  character?: number
-  tint?: string
-}
-
-interface GameData {
-  numConnections: number
-  numPlayers: number
-  gameState: GameState
-  position?: number
-}
-
-const SOCKET_URL = 'wss://z9ssnwmz69.execute-api.eu-west-2.amazonaws.com/dev'
-
 const App: React.FC = () => {
-  const [player, setPlayer] = useState<PlayerData>({ name: '', character: 1 })
-  const [gameData, setGameData] = useState<GameData>({
-    numConnections: 0,
-    numPlayers: 0,
-    gameState: GameState.CharacterSelect,
+  const [player, setPlayer] = useState<CharacterSelectData>({
+    name: '',
+    character: 1,
   })
-
-  const onReceiveMessage = (event: any) => {
-    console.log('onReceiveMessage: ', event)
-
-    const gameData = JSON.parse(event.data)
-
-    setGameData(gameData)
-    gameData.msgs.forEach((msg: string) => {
-      toast.success(msg)
-    })
-  }
-
-  const sendMessage = (playerData: PlayerData) => {
-    console.log('onSendMessage: ', playerData)
-    sendJsonMessage({ action: 'sendMessage', data: playerData })
-  }
-
-  const { sendJsonMessage, readyState } = useWebSocket(SOCKET_URL, {
-    onMessage: onReceiveMessage,
-  })
+  const { gameData, sendMessage } = useGameState()
 
   const renderGameState = (state: GameState) => {
     switch (state) {
       case GameState.CharacterSelect:
+      default:
         return (
           <CharacterSelect sendMessage={sendMessage} updatePlayer={setPlayer} />
         )
@@ -90,13 +50,14 @@ const App: React.FC = () => {
         title="Santa Shuffle"
         repo="https://github.com/TomNuttall/santa-shuffle"
       />
-      <Toaster reverseOrder={false} />
-
-      {readyState === ReadyState.OPEN && (
+      {gameData && (
         <>
-          <Game>
-            <Character width={200} height={200} player={player} />
-          </Game>
+          <Toast msgs={gameData.msgs} />
+          <div className="app__pixi">
+            <PixiApp width={200} height={200}>
+              <Character width={200} height={200} player={player} />
+            </PixiApp>
+          </div>
           <div className="app__main">{renderGameState(gameData.gameState)}</div>
         </>
       )}

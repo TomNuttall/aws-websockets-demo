@@ -1,4 +1,9 @@
 .app {
+  &__pixi {
+    display: flex;
+    justify-content: center;
+  }
+
   &__main {
     display: flex;
     justify-content: center;

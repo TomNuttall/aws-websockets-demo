@@ -1,7 +1,7 @@
 import { useCallback, useContext, useEffect, useState } from 'react'
 import { Container, TilingSprite, Sprite, Graphics, useTick } from '@pixi/react'
-import { AssetContext } from '../../Context/AssetContext'
-import { GameState } from '../../App'
+import { AssetContext } from '../../context/AssetContext'
+import { GameState } from '../../hooks/useGameState'
 
 interface BackgroundProps {
   gameState: GameState

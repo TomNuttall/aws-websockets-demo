@@ -3,9 +3,10 @@ import { TextStyle } from '@pixi/text'
 import { Container, Graphics, Text, useTick } from '@pixi/react'
 import { useSpring } from '@react-spring/web'
 import { Sprite } from '@pixi/react-animated'
-import { AssetContext } from '../../Context/AssetContext'
-import { GameState, PlayerData } from '../../App'
+import { AssetContext } from '../../context/AssetContext'
 import { formatOrdinals } from '../../utils/helper'
+import { GameState } from '../../hooks/useGameState'
+import type { PlayerData } from '../../types'
 
 const TEXTURE_LOOKUP: Record<string, string> = {
   'character-1': 'penguin',

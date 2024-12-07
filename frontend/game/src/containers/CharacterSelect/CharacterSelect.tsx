@@ -1,22 +1,30 @@
 import React, { useEffect } from 'react'
 import { useForm } from 'react-hook-form'
-
-import { PlayerData } from '../../App'
+import type { CharacterSelectData } from '../../types'
 
 import './CharacterSelect.scss'
 
+const CHARACTER_OPTIONS: Record<string, string> = {
+  penguin: 'Penguin',
+  snowman: 'Snowman',
+  dalek: 'Dalek',
+  hippo: 'Hippo',
+  reindeer: 'Reindeer',
+  grinch: 'Grinch',
+}
+
 interface CharacterSelectProps {
-  sendMessage: (playerData: PlayerData) => void
-  updatePlayer: (PlayerData: PlayerData) => void
+  sendMessage: (playerData: CharacterSelectData) => void
+  updatePlayer: (PlayerData: CharacterSelectData) => void
 }
 
 const CharacterSelect: React.FC<CharacterSelectProps> = ({
   sendMessage,
   updatePlayer,
 }) => {
-  const { register, handleSubmit, watch } = useForm<PlayerData>()
+  const { register, handleSubmit, watch } = useForm<CharacterSelectData>()
 
-  const onSubmit = (data: PlayerData) => {
+  const onSubmit = (data: CharacterSelectData) => {
     sendMessage({ ...data })
   }
 

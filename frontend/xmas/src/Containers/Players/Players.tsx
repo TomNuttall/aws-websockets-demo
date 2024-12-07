@@ -1,6 +1,7 @@
 import { Container } from '@pixi/react'
-import Player from '../../Components/Player'
-import { GameState, PlayerData } from '../../App'
+import Player from '../../components/Player'
+import { GameState } from '../../hooks/useGameState'
+import type { PlayerData } from '../../types'
 
 interface PlayersProps {
   gameState: GameState

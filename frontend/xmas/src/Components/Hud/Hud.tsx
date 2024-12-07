@@ -1,5 +1,4 @@
-import React from 'react'
-import { GameState } from '../../App'
+import { GameState } from '../../hooks/useGameState'
 import './Hud.scss'
 
 interface HudProps {

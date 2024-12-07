@@ -1,12 +1,12 @@
 import { useContext } from 'react'
 import { Container, Sprite } from '@pixi/react'
 import { AssetContext } from '../../context/AssetContext'
-import { PlayerData } from '../../App'
+import type { CharacterSelectData } from '../../types'
 
 interface PlayerProps {
   width: number
   height: number
-  player: PlayerData
+  player: CharacterSelectData
 }
 
 const TEXTURE_LOOKUP: Record<string, string> = {

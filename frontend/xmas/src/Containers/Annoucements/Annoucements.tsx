@@ -1,6 +1,7 @@
-import { GameState, PlayerData } from '../../App'
-import PanelText from '../../Components/PanelText'
-import CountdownPanel from '../../Components/CountdownPanel'
+import PanelText from '../../components/PanelText'
+import CountdownPanel from '../../components/CountdownPanel'
+import { GameState } from '../../hooks/useGameState'
+import type { PlayerData } from '../../types'
 
 interface AnnoucementsProps {
   gameState: GameState
@@ -17,26 +18,34 @@ const Annoucements: React.FC<AnnoucementsProps> = ({
     (a, b) => (a.position ?? 0) - (b.position ?? 0),
   )
 
-  return (
-    <>
-      {gameState === GameState.CharacterSelect && (
-        <PanelText msg={'No Connection'} showOnFinish={true} scale={2} />
-      )}
-      {gameState === GameState.WaitPlayers && (
+  switch (gameState) {
+    case GameState.CharacterSelect:
+    default:
+      return <PanelText msg={'No Connection'} showOnFinish={true} scale={2} />
+
+    case GameState.WaitPlayers:
+      return (
         <PanelText msg={'Waiting for Players'} showOnFinish={false} scale={2} />
-      )}
-      {gameState === GameState.WaitGame && (
+      )
+
+    case GameState.WaitGame:
+      return (
         <CountdownPanel duration={3} finishMsg={'Go !!!'} onFinish={onStart} />
-      )}
-      {gameState === GameState.Results && sortedPlayers.length > 0 && (
-        <PanelText
-          msg={`${sortedPlayers[0].name} Wins !!!`}
-          showOnFinish={false}
-          scale={2}
-        />
-      )}
-    </>
-  )
+      )
+
+    case GameState.Results: {
+      if (sortedPlayers.length > 0) {
+        return (
+          <PanelText
+            msg={`${sortedPlayers[0].name} Wins !!!`}
+            showOnFinish={false}
+            scale={2}
+          />
+        )
+      }
+      return <></>
+    }
+  }
 }
 
 export default Annoucements

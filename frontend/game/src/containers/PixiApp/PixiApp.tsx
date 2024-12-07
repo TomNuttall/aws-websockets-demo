@@ -2,13 +2,14 @@ import { useEffect, useState, ReactNode } from 'react'
 import { Application as PixiApplication } from '@pixi/app'
 import { Stage } from '@pixi/react'
 import AssetContextProvider from '../../context/AssetContext'
-import './Game.scss'
 
-interface GameProps {
+interface PixiAppProps {
+  width: number
+  height: number
   children: ReactNode
 }
 
-const Game: React.FC<GameProps> = ({ children }) => {
+const PixiApp: React.FC<PixiAppProps> = ({ width, height, children }) => {
   const [app, setApp] = useState<PixiApplication>()
 
   useEffect(() => {
@@ -23,17 +24,15 @@ const Game: React.FC<GameProps> = ({ children }) => {
   }, [app])
 
   return (
-    <div className="game">
-      <Stage
-        width={200}
-        height={200}
-        onMount={(app: PixiApplication) => setApp(app)}
-        options={{ background: 0xffffff, backgroundAlpha: 0 }}
-      >
-        <AssetContextProvider>{children}</AssetContextProvider>
-      </Stage>
-    </div>
+    <Stage
+      width={width}
+      height={height}
+      onMount={(app: PixiApplication) => setApp(app)}
+      options={{ background: 0xffffff, backgroundAlpha: 0 }}
+    >
+      <AssetContextProvider>{children}</AssetContextProvider>
+    </Stage>
   )
 }
 
-export default Game
+export default PixiApp
