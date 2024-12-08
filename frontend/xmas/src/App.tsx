@@ -1,10 +1,10 @@
 import { useState, useCallback } from 'react'
-import Annoucements from './Containers/Annoucements'
-import Background from './Containers/Background'
-import PixiApp from './Containers/PixiApp'
-import Players from './Containers/Players'
-import Hud from './Components/Hud'
-import Toast from './Components/Toast'
+import Annoucements from './containers/Annoucements'
+import Background from './containers/Background'
+import PixiApp from './containers/PixiApp'
+import Players from './containers/Players'
+import Hud from './components/Hud'
+import Toast from './components/Toast'
 import useGameState from './hooks/useGameState'
 
 const App = () => {
