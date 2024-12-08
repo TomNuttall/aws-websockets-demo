@@ -1,17 +1,9 @@
-import React, { useEffect } from 'react'
+import { useEffect } from 'react'
 import { useForm } from 'react-hook-form'
+import { CHARACTER_OPTIONS } from '../../defs'
 import type { CharacterSelectData } from '../../types'
 
 import './CharacterSelect.scss'
-
-const CHARACTER_OPTIONS: Record<string, string> = {
-  penguin: 'Penguin',
-  snowman: 'Snowman',
-  dalek: 'Dalek',
-  hippo: 'Hippo',
-  reindeer: 'Reindeer',
-  grinch: 'Grinch',
-}
 
 interface CharacterSelectProps {
   sendMessage: (playerData: CharacterSelectData) => void
@@ -46,67 +38,25 @@ const CharacterSelect: React.FC<CharacterSelectProps> = ({
           </label>
           <input id="name" {...register('name', { required: true })} />
         </div>
-        <div>
+        <fieldset>
+          <legend>Character</legend>
           <div className="character-select__options">
-            <div className="form__input-row">
-              <input
-                type="radio"
-                id="penguin"
-                value={1}
-                defaultChecked={true}
-                {...register('character', { required: true })}
-              />
-              <label htmlFor="penguin">Penguin</label>
-            </div>
-            <div className="form__input-row">
-              <input
-                type="radio"
-                id="snowman"
-                value={2}
-                {...register('character', { required: true })}
-              />
-              <label htmlFor="snowman">Snowman</label>
-            </div>
-            <div className="form__input-row">
-              <input
-                type="radio"
-                id="dalek"
-                value={3}
-                {...register('character', { required: true })}
-              />
-              <label htmlFor="dalek">Dalek</label>
-            </div>
+            {Object.keys(CHARACTER_OPTIONS).map((characterKey, index) => (
+              <div className="form__input-row" key={characterKey}>
+                <input
+                  type="radio"
+                  id={characterKey}
+                  value={index + 1}
+                  defaultChecked={index === 0 ? true : false}
+                  {...register('character', { required: true })}
+                />
+                <label htmlFor={characterKey}>
+                  {CHARACTER_OPTIONS[characterKey]}
+                </label>
+              </div>
+            ))}
           </div>
-          <div className="character-select__options">
-            <div className="form__input-row">
-              <input
-                type="radio"
-                id="hippo"
-                value={4}
-                {...register('character', { required: true })}
-              />
-              <label htmlFor="hippo">Hippo</label>
-            </div>
-            <div className="form__input-row">
-              <input
-                type="radio"
-                id="reindeer"
-                value={5}
-                {...register('character', { required: true })}
-              />
-              <label htmlFor="reindeer">Reindeer</label>
-            </div>
-            <div className="form__input-row">
-              <input
-                type="radio"
-                id="grinch"
-                value={6}
-                {...register('character', { required: true })}
-              />
-              <label htmlFor="grinch">Grinch</label>
-            </div>
-          </div>
-        </div>
+        </fieldset>
         <div className="form__input character-select__tint">
           <label className="label" htmlFor="tint">
             Tint
