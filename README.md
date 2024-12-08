@@ -19,13 +19,13 @@ The api has an endpoint for connecting to and an endpoint to send messages back.
 
 Note: Websocket handles unique connection id
 
-1. Client connects and _connect route lamdba_ adds entry into table
-2. Table stream triggers _game state lamdba_ updating game logic and sending update to all connected clients
+1. Client connects and _connect route lambda_ adds entry into table
+2. Table stream triggers _game state lambda_ updating game logic and sending update to all connected clients
 3. Client sends message with character selection and _send message route lambda_ updates entry into table
-4. Table stream triggers _game state lamdba_ updating game logic and sending update to all connected clients
+4. Table stream triggers _game state lambda_ updating game logic and sending update to all connected clients
 5. Host _sends host message_ with start/finish and _send host route lambda_ updates entry into table
-6. Table stream triggers _game state lamdba_ updating game logic and sending update to all connected clients
-7. Client disconnects and _disconnect route lamdba_ removes entry into table
+6. Table stream triggers _game state lambda_ updating game logic and sending update to all connected clients
+7. Client disconnects and _disconnect route lambda_ removes entry into table
 
 ## Frontend
 
