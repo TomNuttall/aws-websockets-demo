@@ -1,7 +1,7 @@
 import { useEffect, useState, ReactNode } from 'react'
 import { Application as PixiApplication } from '@pixi/app'
 import { Stage } from '@pixi/react'
-import AssetContextProvider from '../../context/AssetContext'
+import AssetContextProvider from '../../Context/AssetContext'
 
 interface PixiAppProps {
   width: number

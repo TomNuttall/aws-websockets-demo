@@ -1,5 +1,5 @@
-import PanelText from '../../components/PanelText'
-import CountdownPanel from '../../components/CountdownPanel'
+import PanelText from '../../Components/PanelText'
+import CountdownPanel from '../../Components/CountdownPanel'
 import { GameState } from '../../hooks/useGameState'
 import type { PlayerData } from '../../types'
 

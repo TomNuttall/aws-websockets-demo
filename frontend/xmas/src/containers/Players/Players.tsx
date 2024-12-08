@@ -1,5 +1,5 @@
 import { Container } from '@pixi/react'
-import Player from '../../components/Player'
+import Player from '../../Components/Player'
 import { GameState } from '../../hooks/useGameState'
 import type { PlayerData } from '../../types'
 
