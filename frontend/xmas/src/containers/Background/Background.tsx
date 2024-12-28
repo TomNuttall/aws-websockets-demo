@@ -80,17 +80,6 @@ const Background: React.FC<BackgroundProps> = ({
       />
 
       {gameState !== GameState.WaitGame && <Graphics draw={drawRectangle} />}
-      {gameState === GameState.WaitPlayers && (
-        <Sprite
-          name={'finish'}
-          x={1150}
-          y={475}
-          anchor={0.5}
-          width={200}
-          height={200}
-          texture={textures?.qrcode}
-        />
-      )}
     </Container>
   )
 }

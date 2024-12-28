@@ -124,7 +124,7 @@
             <key>data</key>
             <struct type="DataFile">
                 <key>name</key>
-                <filename>../../export/background.json</filename>
+                <filename>../../export/background_v2.json</filename>
             </struct>
         </map>
         <key>multiPackMode</key>

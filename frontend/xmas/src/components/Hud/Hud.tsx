@@ -18,7 +18,7 @@ const Hud: React.FC<HudProps> = ({
 }) => {
   const onClick = () => {
     switch (gameState) {
-      case GameState.CharacterSelect:
+      case GameState.NoConnection:
         onConnect()
         break
       case GameState.WaitPlayers:
@@ -29,7 +29,7 @@ const Hud: React.FC<HudProps> = ({
 
   let buttonText = ''
   switch (gameState) {
-    case GameState.CharacterSelect:
+    case GameState.NoConnection:
       buttonText = 'Connect'
       break
     case GameState.WaitPlayers:
@@ -51,9 +51,6 @@ const Hud: React.FC<HudProps> = ({
         )}
       </div>
       <div className="hud__info">
-        <a href="https://tomnuttall.dev/projects/game">
-          https://tomnuttall.dev/projects/game
-        </a>
         {buttonText.length > 0 && (
           <button onClick={onClick}>{buttonText}</button>
         )}

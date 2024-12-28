@@ -5,6 +5,7 @@ import { HostData, GameData } from '../types'
 const SOCKET_URL = 'wss://z9ssnwmz69.execute-api.eu-west-2.amazonaws.com/dev'
 
 export enum GameState {
+  NoConnection = 'noConnection',
   CharacterSelect = 'characterSelect',
   WaitPlayers = 'waitPlayers',
   WaitGame = 'waitGame',
@@ -16,7 +17,7 @@ const useGameState = () => {
   const [gameData, setGameData] = useState<GameData>({
     numConnections: 0,
     numPlayers: 0,
-    gameState: GameState.CharacterSelect,
+    gameState: GameState.NoConnection,
     players: [],
     msgs: [],
   })

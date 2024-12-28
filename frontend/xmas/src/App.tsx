@@ -5,7 +5,8 @@ import PixiApp from './containers/PixiApp'
 import Players from './containers/Players'
 import Hud from './components/Hud'
 import Toast from './components/Toast'
-import useGameState from './hooks/useGameState'
+import JoinLink from './components/JoinLink'
+import useGameState, { GameState } from './hooks/useGameState'
 
 const App = () => {
   const [animate, setAnimate] = useState<boolean>(false)
@@ -39,6 +40,9 @@ const App = () => {
           onStart={() => setAnimate(true)}
         />
       </PixiApp>
+      {[GameState.CharacterSelect, GameState.WaitPlayers].includes(
+        gameData.gameState,
+      ) && <JoinLink url="https://tomnuttall.dev/projects/game" id="testing" />}
       <Hud
         numConnections={gameData.numConnections}
         numPlayers={gameData.numPlayers}
