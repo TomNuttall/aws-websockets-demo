@@ -4,8 +4,8 @@ export const manifest = {
       name: 'gameScene',
       assets: [
         {
-          name: 'character',
-          srcs: 'spritesheets/character_v2.json',
+          alias: 'character',
+          src: 'spritesheets/character_v2.json',
         },
       ],
     },
