@@ -37,10 +37,10 @@ jobs:
       - name: Install Dependancies
         run: yarn install
 
-      # - name: Test Dashboard
-      #   run: yarn test
+      - name: Test
+        run: yarn test
 
-      - name: Build Client
+      - name: Build
         run: yarn build
 
       - name: Configure AWS Credentials for S3 Access
