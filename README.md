@@ -31,7 +31,7 @@ Note: Websocket handles unique connection id
 
 | Package                                                                  | For                                   |
 | ------------------------------------------------------------------------ | ------------------------------------- |
-| [Pixi React](https://pixijs.io/pixi-react/)                              | Rendering, react binidngs for Pixi.js |
+| [Pixi React](https://pixijs.io/pixi-react/)                              | Rendering, react bindings for Pixi.js |
 | [React Spring](https://www.react-spring.dev)                             | Tween animations                      |
 | [React Use Websocket](https://github.com/robtaussig/react-use-websocket) | Web socket Hook                       |
 | [React Hot Toast](https://react-hot-toast.com)                           | Toasts                                |
