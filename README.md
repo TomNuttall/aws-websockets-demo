@@ -1,6 +1,6 @@
 # Web Socket Demo
 
-Small game used as part of a presentation on learning and studying for AWS certification.
+Small game used as part of a team presentation on learning and studying for AWS certification.
 
 
 Web socket api used to handle communication between connected game clients and host.
