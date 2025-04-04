@@ -1,6 +1,9 @@
 # Web Socket Demo
 
-Demo Project: Web socket api used to handle communication between connected game clients and host.
+Small game used as part of a presentation on learning and studying for AWS certification.
+
+
+Web socket api used to handle communication between connected game clients and host.
 
 The api has an endpoint for connecting to and an endpoint to send messages back.
 
